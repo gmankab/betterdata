@@ -74,7 +74,7 @@ def load(name: str, ins: str = 'bd'):  # ins is instance or type
             data = pickle.load(open(f'data/{name}', 'rb'))
             data.name = name
             return data
-        case 'yml':
+        case 'yml ':
             data = yaml.load(open(f'data/{name}', 'r').read(), Loader=yaml.Loader)
             data['name'] = name
             match ins.lower():
