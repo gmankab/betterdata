@@ -86,3 +86,10 @@ def load(name: str, ins: str = 'bd'):  # ins is instance or type
                     raise TypeError("Only 'bd' and 'dct' instances supported")
         case _:
             raise UnsupportedExtensionError("only 'pickle' and 'yml' extensions supported")
+
+
+def list_subtract(list_, blacklist):
+    for i in blacklist:
+        if i in list_:
+            list_.remove(i)
+    return list_
