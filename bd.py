@@ -1,8 +1,34 @@
 # python 3.10 +
 from dataclasses import dataclass
+from inspect import cleandoc
 import pickle
 import yaml
 import os
+
+
+def run(command, printing:bool = True):
+    command_type = type(command).__name__
+    match command_type:
+        case 'str':
+            pass
+        case 'list':
+            command = ' '.join(command)
+        case _:
+            raise TypeError(
+                cleandoc(
+                    f'''
+                    expected types of 'command' argument:
+                        str, list
+                    get:
+                        {command_type}
+                    '''
+                )
+            )
+
+    if printing:
+        os.system(command)
+    else:
+        return os.popen(command).read()
 
 
 def init(path=os.getcwd()):
@@ -64,10 +90,12 @@ def dump(data, name: str = None):
                 data = data.to_dict
             yaml.dump(data, open(f'data/{name}', 'w'))
         case _:
-            raise UnsupportedExtensionError("only 'pickle' and 'yml' extensions supported")
+            raise UnsupportedExtensionError(
+                "only 'pickle' and 'yml' extensions supported"
+            )
 
 
-def load(name: str, ins: str = 'bd'):  # ins is instance or type
+def load(name: str, ins: str = 'bd'):  # ins = instance or type
     extension = name.split('.')[-1]
     match extension:
         case 'pickle':
@@ -93,3 +121,29 @@ def list_subtract(list_, blacklist):
         if i in list_:
             list_.remove(i)
     return list_
+
+
+def isends(file, ext):
+    return file[-len(ext):] == ext
+
+
+def conc(a, b):
+    if a[-1] == "\\":
+        a = a[:-1]
+    return '\\'.join([a, b])
+
+
+def filename(path:str):
+    return path.rsplit('\\', 1)[-1]
+
+
+def rmdir(path:str):
+    run(f'RMDIR "{path}" /S /Q')
+
+
+def rm(string:str, to_remove):
+    if isinstance(to_remove, str):
+        to_remove = [to_remove]
+    for i in to_remove:
+        string = string.replace(i, '')
+    return string
