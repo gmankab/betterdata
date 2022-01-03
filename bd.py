@@ -1,41 +1,15 @@
 # python 3.10 +
+from forbiddenfruit import curse
 from dataclasses import dataclass
 from inspect import cleandoc
 import pickle
 import yaml
+import sys
 import os
 
 
-def run(command, printing:bool = True):
-    command_type = type(command).__name__
-    match command_type:
-        case 'str':
-            pass
-        case 'list':
-            command = ' '.join(command)
-        case _:
-            raise TypeError(
-                cleandoc(
-                    f'''
-                    expected types of 'command' argument:
-                        str, list
-                    get:
-                        {command_type}
-                    '''
-                )
-            )
-
-    if printing:
-        os.system(command)
-    else:
-        return os.popen(command).read()
-
-
-def init(path=os.getcwd()):
-    os.chdir(path)
-    print(path)
-    if 'data' not in os.listdir():
-        os.mkdir('data')
+class VersionError(Exception):
+    pass
 
 
 class NameExpectedError(Exception):
@@ -69,6 +43,44 @@ class BetterData:
         elif not name:
             vars(self).pop('name', None)
         return vars(self)
+
+
+def init(required_vers = '3.10'):
+    check_python_vers(required_vers)
+    install_requirements()
+    curse(str, 'bdj', bdj)
+    # add "bdj" method to "str" class
+
+def check_python_vers(required_vers):
+    if '.'.join(str(i) for i in sys.version_info) < required_vers:
+        raise VersionError(
+            f'Python version must be at least {required_vers}'
+        )
+
+
+def run(command, printing:bool = True):
+    command_type = type(command).__name__
+    match command_type:
+        case 'str':
+            pass
+        case 'list':
+            command = ' '.join(command)
+        case _:
+            raise TypeError(
+                cleandoc(
+                    f'''
+                    expected types of 'command' argument:
+                        str, list
+                    get:
+                        {command_type}
+                    '''
+                )
+            )
+
+    if printing:
+        os.system(command)
+    else:
+        return os.popen(command).read()
 
 
 def dump(data, name: str = None):
@@ -116,6 +128,49 @@ def load(name: str, ins: str = 'bd'):  # ins = instance or type
             raise UnsupportedExtensionError("only 'pickle' and 'yml' extensions supported")
 
 
+def update_pip():
+    output = run(f'{sys.executable} -m pip install --upgrade pip', printing=False)
+    if output[:30] != 'Requirement already satisfied:':
+        print(output)
+
+
+def install_requirements():
+    def install(module):
+        match type(module).__name__:
+            case 'str':
+                install_name = module
+                import_name = module
+            case 'list':
+                import_name, install_name = module
+            case _:
+                raise TypeError(
+                    type_error_message(
+                        expected=(str, list),
+                        get=type(module).__name__
+                    )
+                )
+        try:
+            __import__(import_name)
+        except ImportError:
+            print(f'installing {install_name}...')
+            run(f'{sys.executable} -m pip install {install_name}')
+
+    betterdata_requirements = [
+        'forbiddenfruit'
+    ]
+
+    for module in betterdata_requirements:
+        install(module)
+
+    if 'requirements.py' in os.listdir():
+        # pyright: reportMissingImports=false
+        # pylint: disable=import-outside-toplevel
+        # pylint: disable=import-error
+        from requirements import requirements
+        for module in requirements:
+            install(module)
+
+
 def list_subtract(list_, blacklist):
     for i in blacklist:
         if i in list_:
@@ -127,10 +182,10 @@ def isends(file, ext):
     return file[-len(ext):] == ext
 
 
-def conc(a, b):
-    if a[-1] == "\\":
-        a = a[:-1]
-    return '\\'.join([a, b])
+# def conc(a, b):
+#     if a[-1] == "\\":
+#         a = a[:-1]
+#     return '\\'.join([a, b])
 
 
 def filename(path:str):
@@ -147,3 +202,31 @@ def rm(string:str, to_remove):
     for i in to_remove:
         string = string.replace(i, '')
     return string
+
+
+def typenm(object_):  # type name
+    return type(object_).__name__
+
+
+def type_error_message(expected, get):
+    return cleandoc(
+        f'''
+        expected types:
+            {', '.join(expected)}
+        get:
+            {get}
+        '''
+    )
+
+
+def bdj(self, *args):  # universal analog of ".join()", better data join
+    to_join = []
+    for arg in args:
+        if isinstance(arg, list):
+            to_join += list(str(i) for i in arg)
+        else:
+            to_join.append(str(arg))
+    return self.join(to_join)
+
+
+init()
