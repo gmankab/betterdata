@@ -1,23 +1,58 @@
 '''
 
-   oooooooooo.   oooooooooo.       telegram | @gmanka
+   oooooooooo.   oooooooooo.       telegram | gmanka
    `888'   `Y8b  `888'   `Y8b       discord | gmanka#3806
     888     888   888      888       github | gmankab/betterdata
     888oooo888'   888      888       donate | 5536 9139 9403 2981
-    888    `88b   888      888       python | 3.10
+    888    `88b   888      888       python | 3.10.1
     888    .88P   888     d88'       vscode | 1.61.2
    o888bood8P'   o888bood8P'     betterdata | 22.0
 
 '''
 
-
-from forbiddenfruit import curse
-from dataclasses import dataclass
 from inspect import cleandoc
 import pickle
-import yaml
 import sys
 import os
+
+# noqa: E731
+# noqa: F821
+# pyright: reportUndefinedVariable=false
+# pyright: reportMissingImports=false
+# pylint: disable=import-outside-toplevel
+# pylint: disable=import-error
+
+
+def install(module):
+    match type(module).__name__:
+        case 'str':
+            install_name = module
+            import_name = module
+        case 'list':
+            import_name, install_name = module
+        case _:
+            raise TypeError(
+                type_error_message(
+                    expected=(str, list),
+                    get=type(module).__name__
+                )
+            )
+    try:
+        __import__(import_name)
+    except ImportError:
+        print(f'installing {install_name}:')
+        os.system(f'{sys.executable} -m pip install {install_name}')
+
+
+for module in [
+    'forbiddenfruit',
+    ['yaml', 'pyyaml'],
+]:
+    install(module)
+
+
+from forbiddenfruit import curse
+import yaml
 
 
 class VersionError(Exception):
@@ -57,11 +92,17 @@ class BetterData:
         return vars(self)
 
 
-def init(required_vers = '3.10'):
+def init(required_vers = '3.10.1'):
     check_python_vers(required_vers)
-    install_requirements()
-    curse(str, 'bdj', bdj)
+
+    if 'requirements.py' in os.listdir():
+        from requirements import requirements
+        for module in requirements:
+            install(module)
+
+    curse(str, 'bdj', bdj)  # noqa: F821
     # add "bdj" method to "str" class
+
 
 def check_python_vers(required_vers):
     if '.'.join(str(i) for i in sys.version_info) < required_vers:
@@ -70,7 +111,7 @@ def check_python_vers(required_vers):
         )
 
 
-def run(command, printing:bool = True):
+def run(command, printing: bool = True):
     command_type = type(command).__name__
     match command_type:
         case 'str':
@@ -127,7 +168,10 @@ def load(name: str, ins: str = 'bd'):  # ins = instance or type
             data.name = name
             return data
         case 'yml ':
-            data = yaml.load(open(f'data/{name}', 'r').read(), Loader=yaml.Loader)
+            data = yaml.load(
+                open(f'data/{name}', 'r').read(),
+                Loader=yaml.Loader
+            )
             data['name'] = name
             match ins.lower():
                 case 'dict' | 'dc' | 'dct':
@@ -137,50 +181,18 @@ def load(name: str, ins: str = 'bd'):  # ins = instance or type
                 case _:
                     raise TypeError("Only 'bd' and 'dct' instances supported")
         case _:
-            raise UnsupportedExtensionError("only 'pickle' and 'yml' extensions supported")
+            raise UnsupportedExtensionError(
+                "only 'pickle' and 'yml' extensions supported"
+            )
 
 
 def update_pip():
-    output = run(f'{sys.executable} -m pip install --upgrade pip', printing=False)
+    output = run(
+        f'{sys.executable} -m pip install --upgrade pip',
+        printing=False
+    )
     if output[:30] != 'Requirement already satisfied:':
         print(output)
-
-
-def install_requirements():
-    def install(module):
-        match type(module).__name__:
-            case 'str':
-                install_name = module
-                import_name = module
-            case 'list':
-                import_name, install_name = module
-            case _:
-                raise TypeError(
-                    type_error_message(
-                        expected=(str, list),
-                        get=type(module).__name__
-                    )
-                )
-        try:
-            __import__(import_name)
-        except ImportError:
-            print(f'installing {install_name}...')
-            run(f'{sys.executable} -m pip install {install_name}')
-
-    betterdata_requirements = [
-        'forbiddenfruit'
-    ]
-
-    for module in betterdata_requirements:
-        install(module)
-
-    if 'requirements.py' in os.listdir():
-        # pyright: reportMissingImports=false
-        # pylint: disable=import-outside-toplevel
-        # pylint: disable=import-error
-        from requirements import requirements
-        for module in requirements:
-            install(module)
 
 
 def list_subtract(list_, blacklist):
@@ -200,15 +212,15 @@ def isends(file, ext):
 #     return '\\'.join([a, b])
 
 
-def filename(path:str):
+def filename(path: str):
     return path.rsplit('\\', 1)[-1]
 
 
-def rmdir(path:str):
+def rmdir(path: str):
     run(f'RMDIR "{path}" /S /Q')
 
 
-def rm(string:str, to_remove):
+def rm(string: str, to_remove):
     if isinstance(to_remove, str):
         to_remove = [to_remove]
     for i in to_remove:
