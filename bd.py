@@ -1,19 +1,49 @@
 '''
-
-   oooooooooo.   oooooooooo.       telegram | gmanka
-   `888'   `Y8b  `888'   `Y8b       discord | gmanka#3806
-    888     888   888      888       github | gmankab/betterdata
-    888oooo888'   888      888       donate | 5536 9139 9403 2981
-    888    `88b   888      888       python | 3.10.1
-    888    .88P   888     d88'       vscode | 1.61.2
-   o888bood8P'   o888bood8P'     betterdata | 22.0
+oooooooooo.   oooooooooo.
+`888'   `Y8b  `888'   `Y8b
+ 888     888   888      888
+ 888oooo888'   888      888
+ 888    `88b   888      888
+ 888    .88P   888     d88'
+o888bood8P'   o888bood8P'
 
 '''
 
-from inspect import cleandoc
+from dataclasses import dataclass
+from inspect import cleandoc as cd
+from pprint import pp
 import pickle
 import sys
 import os
+
+
+@dataclass
+class Version:
+    # the betterdata library was written in this version of python,
+    # on lower python versions it will not work
+    python_required = '3.10.1'
+
+    # stable work is guaranteed only on python versions listed here:
+    python_tested_on = [
+        '3.10.1'
+    ]
+
+    betterdata = '22.0'
+
+
+@dataclass
+class Contacts:
+    telegram = 'https://t.me/gmanka'
+    discord = 'gmanka#3806'
+    github = 'https://github.com/gmankab/betterdata'
+
+
+@dataclass
+class Donate:
+    DonationAlerts = 'https://donationalerts.com/r/gmanka'
+    tinkoff = '5536 9139 9403 2981'
+    sber = '5336 6903 8044 6684'
+
 
 # noqa: E731
 # noqa: F821
@@ -23,36 +53,97 @@ import os
 # pylint: disable=import-error
 
 
-def install(module):
-    match type(module).__name__:
-        case 'str':
-            install_name = module
-            import_name = module
-        case 'list':
-            import_name, install_name = module
-        case _:
-            raise TypeError(
-                type_error_message(
-                    expected=(str, list),
-                    get=type(module).__name__
-                )
-            )
-    try:
-        __import__(import_name)
-    except ImportError:
-        print(f'installing {install_name}:')
-        os.system(f'{sys.executable} -m pip install {install_name}')
+def check_python_vers(required_vers):
+    if '.'.join(str(i) for i in sys.version_info) < required_vers:
+        raise VersionError(
+            f'Python version must be at least {required_vers}'
+        )
 
 
-for module in [
-    'forbiddenfruit',
-    ['yaml', 'pyyaml'],
-]:
-    install(module)
+check_python_vers(required_vers=Version.python_required)
+
+
+def to_list(*args, convert=None):
+    '''
+    make list of str from anything
+    '''
+
+    @dataclass
+    class Answer:
+        list = []
+
+    def recursive_add_str(whatever):
+        if isinstance(whatever, (list, tuple)):
+            for i in whatever:
+                recursive_add_str(i)
+        else:
+            if convert:
+                whatever = convert(whatever)
+            Answer.list.append(whatever)
+
+    for arg in args:
+        recursive_add_str(arg)
+
+    return Answer.list
 
 
 from forbiddenfruit import curse
 import yaml
+
+
+def modify_builtin_functions():
+    def str_isends(self, end):
+        return self[-len(end):] == end
+
+    def str_conc(self, *peaces):  # universal analog of ".join()"
+        return self.join(to_list(peaces, convert=str))
+
+    def rm(self, *to_remove):
+        to_remove = to_list(to_remove, convert=str)
+        for i in to_remove:
+            self = self.replace(i, '')
+        return self
+
+    def str_rmborders(self, *borders):
+        for border in to_list(borders):
+            while self[:len(border)] == border:
+                self = self[len(border):]
+            while self[-len(border):] == '\\':
+                self = self[:-len(border)]
+
+    def str_msplit(self, *delims, limit=None):
+        if not limit and isinstance(delims[-1], int):
+            limit = delims[-1]
+            delims = delims[:-1]
+        delims = to_list(delims)
+        pos = 0
+        splitted = []
+        for index in range(len(self)):
+            for delim in delims:
+                if self[index:index + len(delim)] == delim:
+                    if limit:
+                        limit -= 1
+                    elif limit == 0:
+                        splitted.append(self[pos:])
+                        return splitted
+                    if self[pos:index]:
+                        splitted.append(self[pos:index])
+                    pos = index + len(delim)
+        splitted.append(self[pos:])
+        return splitted
+
+    def list_rm(self, *to_remove):
+        for i in to_list(to_remove):
+            if i in self:
+                self.remove(i)
+        return self
+
+    for funcname, func in locals().copy().items():
+        builtin_funcname, addmethod = funcname.split('_', 1)
+        curse(eval(builtin_funcname), addmethod, func)
+
+
+modify_builtin_functions()
 
 
 class VersionError(Exception):
@@ -73,7 +164,7 @@ class UnsupportedExtensionError(Exception):
     pass
 
 
-class BetterData:
+class Bd:
     """
     @DynamicAttrs
     disabling pycharm "unresolved attribute" warnings
@@ -92,27 +183,39 @@ class BetterData:
         return vars(self)
 
 
-def init(required_vers = '3.10.1'):
-    check_python_vers(required_vers)
+class Path:
+    def __init__(self, *peaces):
+        peaces = to_list(peaces)
+        self.list = []
+        self.conc(peaces)
+        # for i in args.split('/'):
+        #     self.list += i.msplit()
 
-    if 'requirements.py' in os.listdir():
-        from requirements import requirements
-        for module in requirements:
-            install(module)
+    def __repr__(self) -> str:
+        return self.str
 
-    curse(str, 'bdj', bdj)  # noqa: F821
-    # add "bdj" method to "str" class
+    def __getitem__(self, item):
+        return self.list[item]
+
+    def conc(self, *peaces):
+        peaces = to_list(peaces, convert=str)
+        for peace in peaces:
+            self.list += peace.msplit('/', '\\')
+            self.str = '/'.join(self.list)
+        return self.str
+
+    def rmdir(self):
+        run(f'rmdir "{self.str}" /S /Q')
+
+    isends = str.isends
 
 
-def check_python_vers(required_vers):
-    if '.'.join(str(i) for i in sys.version_info) < required_vers:
-        raise VersionError(
-            f'Python version must be at least {required_vers}'
-        )
+path = Path('a/b/c\\d\\e/f', 'g', 'h', ['i'], 1)
+print(path[-2])
 
 
 def run(command, printing: bool = True):
-    command_type = type(command).__name__
+    command_type = typestr(command)
     match command_type:
         case 'str':
             pass
@@ -120,7 +223,7 @@ def run(command, printing: bool = True):
             command = ' '.join(command)
         case _:
             raise TypeError(
-                cleandoc(
+                cd(
                     f'''
                     expected types of 'command' argument:
                         str, list
@@ -177,7 +280,7 @@ def load(name: str, ins: str = 'bd'):  # ins = instance or type
                 case 'dict' | 'dc' | 'dct':
                     return data
                 case 'bd' | 'betterdata':
-                    return BetterData(data)
+                    return Bd(data)
                 case _:
                     raise TypeError("Only 'bd' and 'dct' instances supported")
         case _:
@@ -186,54 +289,12 @@ def load(name: str, ins: str = 'bd'):  # ins = instance or type
             )
 
 
-def update_pip():
-    output = run(
-        f'{sys.executable} -m pip install --upgrade pip',
-        printing=False
-    )
-    if output[:30] != 'Requirement already satisfied:':
-        print(output)
-
-
-def list_subtract(list_, blacklist):
-    for i in blacklist:
-        if i in list_:
-            list_.remove(i)
-    return list_
-
-
-def isends(file, ext):
-    return file[-len(ext):] == ext
-
-
-# def conc(a, b):
-#     if a[-1] == "\\":
-#         a = a[:-1]
-#     return '\\'.join([a, b])
-
-
-def filename(path: str):
-    return path.rsplit('\\', 1)[-1]
-
-
-def rmdir(path: str):
-    run(f'RMDIR "{path}" /S /Q')
-
-
-def rm(string: str, to_remove):
-    if isinstance(to_remove, str):
-        to_remove = [to_remove]
-    for i in to_remove:
-        string = string.replace(i, '')
-    return string
-
-
-def typenm(object_):  # type name
+def typestr(object_):  # type name
     return type(object_).__name__
 
 
 def type_error_message(expected, get):
-    return cleandoc(
+    return cd(
         f'''
         expected types:
             {', '.join(expected)}
@@ -241,13 +302,3 @@ def type_error_message(expected, get):
             {get}
         '''
     )
-
-
-def bdj(self, *args):  # universal analog of ".join()", better data join
-    to_join = []
-    for arg in args:
-        if isinstance(arg, list):
-            to_join += list(str(i) for i in arg)
-        else:
-            to_join.append(str(arg))
-    return self.join(to_join)
