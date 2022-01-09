@@ -16,6 +16,4 @@
     888    .88P   888     d88'       vscode | 1.61.2
    o888bood8P'   o888bood8P'     betterdata | 22.0
 ```
-
-## my small python module for easier working with data
-
+documentation will be here soon...
