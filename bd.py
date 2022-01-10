@@ -13,7 +13,7 @@ o888bood8P'   o888bood8P'
 from dataclasses import dataclass
 from inspect import cleandoc as cd
 from pprint import pp
-import urllib
+from urllib import request as r
 import pickle
 import sys
 import os
@@ -23,29 +23,30 @@ import os
 class Requirements:
     folder = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
     list = [
-        'forbiddenfruit_0-1-4.py'
+        'forbiddenfruit_0-1-4'
     ]
 
 
 sys.path.append('.')
 if 'libs' in os.listdir():
-    sys.path.append('.')
+    sys.path.append('./libs')
 
 
-try:
-    for requirement in Requirements.list:
-        __import__(requirement)
-except ImportError:
-    print('downloadings libs...')
+# try:
+#     for requirement in Requirements.list:
+#         __import__(requirement)
+# except ImportError:
+#     print('downloadings libs...')
 
-    if 'libs' not in os.listdir():
-        os.mkdir('libs')
+#     if 'libs' not in os.listdir():
+#         os.mkdir('libs')
 
-    for requirement in Requirements.list:
-        urllib.urlretrieve(
-            f'{Requirements.folder}/{requirement}',
-            f'libs/{requirement}'
-        )
+#     for requirement in Requirements.list:
+#         r.urlretrieve(
+#             f'{Requirements.folder}/{requirement}',
+#             f'libs/{requirement}'
+#         )
+__import__('forbiddenfruit_0-1-4')
 
 
 @dataclass
