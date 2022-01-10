@@ -10,6 +10,7 @@ o888bood8P'   o888bood8P'
 '''
 
 
+# import only builtin libs
 from dataclasses import dataclass
 from inspect import cleandoc as cd
 from pprint import pp
@@ -23,18 +24,38 @@ import os
 @dataclass
 class Requirements:
     folder = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
-    list = [
-        'forbiddenfruit_0_1_4'
-    ]
+    list = {
+        'forbiddenfruit_0_1_4': [
+        ],
+        'yml_6_0': [
+            'composer.py',
+            'constructor.py',
+            'cyaml.py',
+            'dumper.py',
+            'emitter.py',
+            'error.py',
+            'events.py',
+            'loader.py',
+            'nodes.py',
+            'parser.py',
+            'reader.py',
+            'representer.py',
+            'resolver.py',
+            'scanner.py',
+            'serializer.py',
+            'tokens.py',
+            '__init__.py'
+        ]
+    }
 
 
 filedir = str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
-print(filedir)
 sys.path.append(filedir)
 if 'libs' in os.listdir():
     sys.path.append(f'{filedir}/libs')
 
 
+# installing non-builtin libs
 try:
     for requirement in Requirements.list:
         __import__(requirement)
@@ -51,7 +72,9 @@ except ImportError:
         )
 
 
+# import non-builtin libs
 from forbiddenfruit_0_1_4 import curse
+import yml_6_0 as yml
 
 
 @dataclass
@@ -86,6 +109,7 @@ class Donate:
 # noqa: F821
 # pyright: reportUndefinedVariable=false
 # pyright: reportMissingImports=false
+# pyright: reportMissingModuleSource=false
 # pylint: disable=import-outside-toplevel
 # pylint: disable=import-error
 
