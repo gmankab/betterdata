@@ -16,6 +16,7 @@ from inspect import cleandoc as cd
 from pprint import pp
 from urllib import request as r
 import pathlib
+import shutil
 import pickle
 import sys
 import os
@@ -64,10 +65,12 @@ try:
 except ImportError:
     print('downloadings libs...')
 
-    if 'libs' not in os.listdir(filedir):
-        os.mkdir(f'{filedir}/libs')
-
     libs_dir = f'{filedir}/libs'
+
+    if 'libs' in os.listdir(filedir):
+        shutil.rmtree(libs_dir)
+
+    os.mkdir(libs_dir)
 
     for requirement, files in Requirements.dict.items():
         libdir = f'{libs_dir}/{requirement}'
