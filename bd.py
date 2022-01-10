@@ -71,8 +71,9 @@ except ImportError:
         libdir = f'{libs_dir}/{requirement}'
         os.mkdir(libdir)
         for file in files:
+            print(f'downloading {file}')
             r.urlretrieve(
-                f'{Requirements.link}/{file}',
+                f'{Requirements.link}/{requirement}/{file}',
                 f'{libdir}/{file}'
             )
 
