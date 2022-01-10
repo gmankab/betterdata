@@ -28,7 +28,7 @@ class Requirements:
     ]
 
 
-filedir = str(pathlib.Path(__file__).parent.resolve().replace('\\', '/')
+filedir = str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
 print(filedir)
 sys.path.append(filedir)
 if 'libs' in os.listdir():
