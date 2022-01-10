@@ -15,13 +15,13 @@ o888bood8P'   o888bood8P'
 
 ```
 
-## [Докумениация на английском](https://github.com/gmankab/betterdata/blob/main/readme.md)
-## [Documentation in english](https://github.com/gmankab/betterdata/blob/main/readme.md)
+### [Докумениация на английском](https://github.com/gmankab/betterdata/blob/main/readme.md)
+### [Documentation in english](https://github.com/gmankab/betterdata/blob/main/readme.md)
 
 
 ## Оглавление
 - [Принципы](#принципы)
-  - 
+- [Документация](#документация)
 
 - - -
 
