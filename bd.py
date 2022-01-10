@@ -26,7 +26,7 @@ class Requirements:
     link = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
     dict = {
         'forbiddenfruit_0_1_4': [
-            '__init__.py_',
+            '__init__.py',
         ],
         'yml_6_0': [
             'composer.py',
