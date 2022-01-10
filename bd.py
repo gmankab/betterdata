@@ -9,12 +9,43 @@ o888bood8P'   o888bood8P'
 
 '''
 
+
 from dataclasses import dataclass
 from inspect import cleandoc as cd
 from pprint import pp
+import urllib
 import pickle
 import sys
 import os
+
+
+@dataclass
+class Requirements:
+    folder = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
+    list = [
+        'forbiddenfruit_0-1-4.py'
+    ]
+
+
+sys.path.append('.')
+if 'libs' in os.listdir():
+    sys.path.append('.')
+
+
+try:
+    for requirement in Requirements.list:
+        __import__(requirement)
+except ImportError:
+    print('downloadings libs...')
+
+    if 'libs' not in os.listdir():
+        os.mkdir('libs')
+
+    for requirement in Requirements.list:
+        urllib.urlretrieve(
+            f'{Requirements.folder}/{requirement}',
+            f'libs/{requirement}'
+        )
 
 
 @dataclass
@@ -98,7 +129,7 @@ def modify_builtin_functions():
     def str_conc(self, *peaces):  # universal analog of ".join()"
         return self.join(to_list(peaces, convert=str))
 
-    def rm(self, *to_remove):
+    def str_rm(self, *to_remove):
         to_remove = to_list(to_remove, convert=str)
         for i in to_remove:
             self = self.replace(i, '')
@@ -208,10 +239,6 @@ class Path:
         run(f'rmdir "{self.str}" /S /Q')
 
     isends = str.isends
-
-
-path = Path('a/b/c\\d\\e/f', 'g', 'h', ['i'], 1)
-print(path[-2])
 
 
 def run(command, printing: bool = True):
