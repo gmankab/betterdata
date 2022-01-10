@@ -71,8 +71,7 @@ pip по следующим причинам:
 ## Установка
 Сейчас скачать betterdeta
 можно только со страницы
-[github releases]
-(https://github.com/gmankab/betterdata/releases).
+[github releases](https://github.com/gmankab/betterdata/releases).
 
 ## Документация
 
