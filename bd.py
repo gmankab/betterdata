@@ -23,8 +23,8 @@ import os
 
 @dataclass
 class Requirements:
-    folder = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
-    list = {
+    link = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
+    dict = {
         'forbiddenfruit_0_1_4': [
         ],
         'yml_6_0': [
@@ -57,7 +57,7 @@ if 'libs' in os.listdir():
 
 # installing non-builtin libs
 try:
-    for requirement in Requirements.list:
+    for requirement in Requirements.dict.keys():
         __import__(requirement)
 except ImportError:
     print('downloadings libs...')
@@ -65,11 +65,16 @@ except ImportError:
     if 'libs' not in os.listdir(filedir):
         os.mkdir(f'{filedir}/libs')
 
-    for requirement in Requirements.list:
-        r.urlretrieve(
-            f'{Requirements.folder}/{requirement}.py',
-            f'{filedir}/libs/{requirement}.py'
-        )
+    libs_dir = f'{filedir}/libs'
+
+    for requirement, files in Requirements.dict.items():
+        libdir = f'{libs_dir}/{requirement}'
+        os.mkdir(libdir)
+        for file in files:
+            r.urlretrieve(
+                f'{Requirements.link}/{file}',
+                f'{libdir}/{file}'
+            )
 
 
 # import non-builtin libs
