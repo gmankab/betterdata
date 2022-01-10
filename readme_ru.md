@@ -1,4 +1,4 @@
-# BetterData [![version](svg/version.svg)](https://github.com/gmankab/betterdata) [![python](svg/python.svg)](https://www.python.org)
+## BetterData [![version](svg/version.svg)](https://github.com/gmankab/betterdata) [![python](svg/python.svg)](https://www.python.org)
 
 [![telegram](svg/telegram.svg)](https://t.me/gmanka)
 [![discord](svg/discord.svg)](https://discordapp.com/users/396578935540023296)
@@ -21,6 +21,7 @@ o888bood8P'   o888bood8P'
 
 ## Оглавление
 - [Принципы](#принципы)
+  - 
 
 - - -
 
@@ -34,7 +35,7 @@ o888bood8P'   o888bood8P'
 операционной системе
 - Библиотека поддерживает только последнюю
 версию python на момент релиза
-- По возможности откажитечь от использования
+- ######По возможности откажитечь от использования
 pip по следующим причинам:
   - pip весит довольно много - 15 мегабайт.
 Если вы используете python embeddable на windows,
