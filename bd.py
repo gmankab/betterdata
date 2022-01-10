@@ -26,6 +26,7 @@ class Requirements:
     link = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
     dict = {
         'forbiddenfruit_0_1_4': [
+            '__init__.py_',
         ],
         'yml_6_0': [
             'composer.py',
@@ -51,6 +52,7 @@ class Requirements:
 
 filedir = str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
 sys.path.append(filedir)
+
 if 'libs' in os.listdir():
     sys.path.append(f'{filedir}/libs')
 
@@ -76,6 +78,10 @@ except ImportError:
                 f'{Requirements.link}/{requirement}/{file}',
                 f'{libdir}/{file}'
             )
+
+
+if 'libs' in os.listdir():
+    sys.path.append(f'{filedir}/libs')
 
 
 # import non-builtin libs
