@@ -23,76 +23,6 @@ import os
 
 
 @dataclass
-class Requirements:
-    link = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
-    dict = {
-        'forbiddenfruit_0_1_4': [
-            '__init__.py',
-        ],
-        'yml_6_0': [
-            'composer.py',
-            'constructor.py',
-            'cyaml.py',
-            'dumper.py',
-            'emitter.py',
-            'error.py',
-            'events.py',
-            'loader.py',
-            'nodes.py',
-            'parser.py',
-            'reader.py',
-            'representer.py',
-            'resolver.py',
-            'scanner.py',
-            'serializer.py',
-            'tokens.py',
-            '__init__.py'
-        ]
-    }
-
-
-filedir = str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
-sys.path.append(filedir)
-
-if 'libs' in os.listdir():
-    sys.path.append(f'{filedir}/libs')
-
-
-# installing non-builtin libs
-try:
-    for requirement in Requirements.dict.keys():
-        __import__(requirement)
-except ImportError:
-    print('downloadings libs...')
-
-    libs_dir = f'{filedir}/libs'
-
-    if 'libs' in os.listdir(filedir):
-        shutil.rmtree(libs_dir)
-
-    os.mkdir(libs_dir)
-
-    for requirement, files in Requirements.dict.items():
-        libdir = f'{libs_dir}/{requirement}'
-        os.mkdir(libdir)
-        for file in files:
-            print(f'downloading {file}')
-            r.urlretrieve(
-                f'{Requirements.link}/{requirement}/{file}',
-                f'{libdir}/{file}'
-            )
-
-
-if 'libs' in os.listdir():
-    sys.path.append(f'{filedir}/libs')
-
-
-# import non-builtin libs
-from forbiddenfruit_0_1_4 import curse
-import yml_6_0 as yml
-
-
-@dataclass
 class Version:
     # the betterdata library was written in this version of python,
     # on lower python versions it will not work
@@ -118,6 +48,85 @@ class Donate:
     DonationAlerts = 'https://donationalerts.com/r/gmanka'
     tinkoff = '5536 9139 9403 2981'
     sber = '5336 6903 8044 6684'
+
+
+def get_file_dir():
+    return str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
+
+
+filedir = get_file_dir()
+sys.path.append(filedir)
+
+
+def install_libs(
+    link: str,
+    requirements: dict,
+    libs_dir_name: str = 'libs',
+    filedir = get_file_dir(),
+):
+    libs_dir = f'{filedir}/{libs_dir_name}'
+
+    if libs_dir_name in os.listdir(filedir):
+        sys.path.append(libs_dir)
+
+    try:
+        for requirement in requirements.keys():
+            __import__(requirement)
+    except ImportError:
+        print('downloadings libs...')
+
+        if libs_dir_name in os.listdir(filedir):
+            shutil.rmtree(libs_dir)
+
+        os.mkdir(libs_dir)
+
+        for requirement, files in requirements.items():
+            libdir = f'{libs_dir}/{requirement}'
+            os.mkdir(libdir)
+            for file in files:
+                print(f'downloading {file}')
+                r.urlretrieve(
+                    f'{link}/{requirement}/{file}',
+                    f'{libdir}/{file}'
+                )
+
+    if libs_dir_name in os.listdir(filedir):
+        sys.path.append(libs_dir)
+
+
+install_libs(
+    libs_dir_name= 'bd_libs',
+    link = 'https://raw.githubusercontent.com/gmankab/betterdata/main/bd_libs',
+    requirements = {
+        'forbiddenfruit_0_1_4': [
+            '__init__.py',
+        ],
+        'yml_6_0': [
+            'composer.py',
+            'constructor.py',
+            'cyaml.py',
+            'dumper.py',
+            'emitter.py',
+            'error.py',
+            'events.py',
+            'loader.py',
+            'nodes.py',
+            'parser.py',
+            'reader.py',
+            'representer.py',
+            'resolver.py',
+            'scanner.py',
+            'serializer.py',
+            'tokens.py',
+            '__init__.py'
+        ]
+    }
+)
+
+
+# import non-builtin libs
+from forbiddenfruit_0_1_4 import curse
+import yml_6_0 as yml
 
 
 # noqa: E731
@@ -324,7 +333,7 @@ def dump(data, name: str = None):
         case 'yml':
             if not isinstance(data, dict):
                 data = data.to_dict
-            yaml.dump(data, open(f'data/{name}', 'w'))
+            yml.dump(data, open(f'data/{name}', 'w'))
         case _:
             raise UnsupportedExtensionError(
                 "only 'pickle' and 'yml' extensions supported"
@@ -339,9 +348,9 @@ def load(name: str, ins: str = 'bd'):  # ins = instance or type
             data.name = name
             return data
         case 'yml ':
-            data = yaml.load(
+            data = yml.load(
                 open(f'data/{name}', 'r').read(),
-                Loader=yaml.Loader
+                Loader=yml.Loader
             )
             data['name'] = name
             match ins.lower():
