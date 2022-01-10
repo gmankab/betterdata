@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from inspect import cleandoc as cd
 from pprint import pp
 from urllib import request as r
+import pathlib
 import pickle
 import sys
 import os
@@ -23,30 +24,34 @@ import os
 class Requirements:
     folder = 'https://raw.githubusercontent.com/gmankab/betterdata/main/libs'
     list = [
-        'forbiddenfruit_0-1-4'
+        'forbiddenfruit_0_1_4'
     ]
 
 
-sys.path.append('.')
+filedir = str(pathlib.Path(__file__).parent.resolve().replace('\\', '/')
+print(filedir)
+sys.path.append(filedir)
 if 'libs' in os.listdir():
-    sys.path.append('./libs')
+    sys.path.append(f'{filedir}/libs')
 
 
-# try:
-#     for requirement in Requirements.list:
-#         __import__(requirement)
-# except ImportError:
-#     print('downloadings libs...')
+try:
+    for requirement in Requirements.list:
+        __import__(requirement)
+except ImportError:
+    print('downloadings libs...')
 
-#     if 'libs' not in os.listdir():
-#         os.mkdir('libs')
+    if 'libs' not in os.listdir(filedir):
+        os.mkdir(f'{filedir}/libs')
 
-#     for requirement in Requirements.list:
-#         r.urlretrieve(
-#             f'{Requirements.folder}/{requirement}',
-#             f'libs/{requirement}'
-#         )
-__import__('forbiddenfruit_0-1-4')
+    for requirement in Requirements.list:
+        r.urlretrieve(
+            f'{Requirements.folder}/{requirement}.py',
+            f'{filedir}/libs/{requirement}.py'
+        )
+
+
+from forbiddenfruit_0_1_4 import curse
 
 
 @dataclass
@@ -117,10 +122,6 @@ def to_list(*args, convert=None):
         recursive_add_str(arg)
 
     return Answer.list
-
-
-from forbiddenfruit import curse
-import yaml
 
 
 def modify_builtin_functions():
