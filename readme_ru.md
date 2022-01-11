@@ -112,7 +112,10 @@ project/
 После первого запуска вы сразу увидите,
 как bettedrata начала устанавливать
 свои зависимости:
-
+```
+installing requirements for betterdata...
+forbiddenfruit_/
+```
 
 ## Документация
 
