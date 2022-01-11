@@ -108,15 +108,31 @@ project/
 ```
 Откройте `main.py` и импортируйте
 в него библиотеку betterdata:
-`import bd`
+```
+import bd
+```
 После первого запуска вы сразу увидите,
-как bettedrata начала устанавливать
+как bettedrata начала скачивать
 свои зависимости:
 ```
-installing requirements for betterdata...
+Downloading requirements for betterdata...
+
 forbiddenfruit_0_1_4/__init__.py
 yml_6_0/__init__.py
 yml_6_0/composer.py
+```
+После этого в папке вашего проекта
+появится еще одна папка:
+```
+project/
+├── main.py
+├── bd.py
+└── bd_libs/
+    ├── forbiddenfruit_0_1_4
+    │   └── __init__.py
+    └── yml_6_0
+        ├── __init__.py
+        └── composer.py
 ```
 
 ## Документация
