@@ -128,9 +128,25 @@ project/
 ├── main.py
 ├── bd.py
 └── bd_libs/
-    ├── forbiddenfruit_0_1_4
+    ├── forbiddenfruit_0_1_4/
     │   └── __init__.py
-    └── yml_6_0
+    └── yml_6_0/
+        ├── __init__.py
+        └── composer.py
+```
+После этого, если хотите, файл `bd.py` можно будет
+перенести в папку `bd_libs`, а папку
+переименовать как вам нравится.
+Для наглядности я переименую ее в `betterdata`.
+Теперь ваш проект будет выглядеть так:
+```
+project/
+├── main.py
+└── betterdata/
+    ├── bd.py
+    ├── forbiddenfruit_0_1_4/
+    │   └── __init__.py
+    └── yml_6_0/
         ├── __init__.py
         └── composer.py
 ```
