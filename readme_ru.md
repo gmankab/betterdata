@@ -114,7 +114,9 @@ project/
 свои зависимости:
 ```
 installing requirements for betterdata...
-forbiddenfruit_/
+forbiddenfruit_0_1_4/__init__.py
+yml_6_0/__init__.py
+yml_6_0/composer.py
 ```
 
 ## Документация
