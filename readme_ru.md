@@ -100,11 +100,12 @@ pip по следующим причинам:
 называться `project`, а файл
 вашего проекта `main.py`.
 Тогда папка проекта должна
-выглядеть вот так:
-```
-project/
-├── main.py
-└── bd.py
+выглядеть вот так,
+далее все папки буду помечать зеленым цветом:
+```diff
++ project/
+  ├── main.py
+  └── bd.py
 ```
 Откройте `main.py` и импортируйте
 в него библиотеку betterdata:
@@ -124,15 +125,15 @@ yml_6_0/composer.py
 После этого в папке вашего проекта
 появится еще одна папка:
 ```
-project/
-├── main.py
-├── bd.py
-└── bd_libs/
-    ├── forbiddenfruit_0_1_4/
-    │   └── __init__.py
-    └── yml_6_0/
-        ├── __init__.py
-        └── composer.py
++ project/
+  ├── main.py
+  ├── bd.py
++  └── bd_libs/
++     ├── forbiddenfruit_0_1_4/
+      │   └── __init__.py
++     └── yml_6_0/
+          ├── __init__.py
+          └── composer.py
 ```
 После этого, если хотите, файл `bd.py` можно будет
 перенести в папку `bd_libs`, а папку
@@ -141,14 +142,14 @@ project/
 Теперь ваш проект будет выглядеть так:
 ```diff
 + project/
-! ├── main.py
-! └── betterdata/
-    ├── bd.py
-    ├── forbiddenfruit_0_1_4/
-    │   └── __init__.py
-    └── yml_6_0/
-        ├── __init__.py
-        └── composer.py
+  ├── main.py
++ └── betterdata/
+      ├── bd.py
++     ├── forbiddenfruit_0_1_4/
+      │   └── __init__.py
++     └── yml_6_0/
+          ├── __init__.py
+          └── composer.py
 ```
 Теперь запуск файла main.py выдаст вам ошибку:
 ```
@@ -159,12 +160,6 @@ project/
 
 ```
 
-```diff
-+ Green
-- Red
-! Orange
-@@ Pink @@
-# Gray
 
 ## Документация
 
