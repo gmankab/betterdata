@@ -124,11 +124,11 @@ yml_6_0/composer.py
 ```
 После этого в папке вашего проекта
 появится еще одна папка:
-```
+```diff
 + project/
   ├── main.py
   ├── bd.py
-+  └── bd_libs/
++ └── bd_libs/
 +     ├── forbiddenfruit_0_1_4/
       │   └── __init__.py
 +     └── yml_6_0/
