@@ -92,7 +92,7 @@ pip по следующим причинам:
 все зависимости нужных версий без
 использования pip.
 Скачайте со страницы
-[github releases](https://github.com/gmankab/betterdata/releases).
+[github releases](https://github.com/gmankab/betterdata/releases)
 файл bd.py и положите его
 в папку вашего python проекта.
 
