@@ -139,10 +139,10 @@ project/
 переименовать как вам нравится.
 Для наглядности я переименую ее в `betterdata`.
 Теперь ваш проект будет выглядеть так:
-```
-project/
-├── main.py
-└── betterdata/
+```diff
++ project/
+! ├── main.py
+! └── betterdata/
     ├── bd.py
     ├── forbiddenfruit_0_1_4/
     │   └── __init__.py
@@ -158,6 +158,13 @@ project/
 ```
 
 ```
+
+```diff
++ Green
+- Red
+! Orange
+@@ Pink @@
+# Gray
 
 ## Документация
 
