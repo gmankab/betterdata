@@ -15,4 +15,9 @@ o888bood8P'   o888bood8P'
 
 ```
 
-documentation will be here soon...
+## [Documentation in russian](https://github.com/gmankab/betterdata/blob/main/readme_ru.md)
+## [Документация на русском](https://github.com/gmankab/betterdata/blob/main/readme_ru.md)
+
+documentation in english will be soon...
+
+
