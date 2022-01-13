@@ -432,11 +432,12 @@ def type_error_message(expected, get):
 
 def printdir(path):
     @dataclass
-    class Data:
-        depth = 0
+    class List:
+        depth = []
+
+    path = Path(path)
 
     def printdir_(path):
-        path = Path(path)
         dir = os.listdir(
             path.to_str()
         )
@@ -452,23 +453,22 @@ def printdir(path):
                 files.append(filepath)
 
         def printdir__(dir):
-            dir.list.rm('E:', 'projects', 'betterdata')
+            print(''.join(List.depth), dir.list[-1])
 
-            print('    ' * (len(dir.list) - 2), '└──', dir.list[-1])
+        depth = len(List.depth)
+        List.depth.append('└──')
 
-        # for i in (dirs):
-        #     printdir__(i)
-        # for i in (files):
-        #     printdir__(i)
-
-        for i in (dirs):
+        for i in dirs:
             printdir__(i)
             printdir_(i)
 
-        for i in (files):
-            printdir__(i)
+        for file in files:
+            printdir__(file)
 
+        List.depth.pop(-1)
+
+    print(path.list[-1])
     printdir_(path)
 
 
-printdir('E:/projects/betterdata/bd_libs')
+printdir('test_libs')
