@@ -131,6 +131,7 @@ import yml_6_0 as yml
 
 # noqa: E731
 # noqa: F821
+# noqa: F841
 # pyright: reportUndefinedVariable=false
 # pyright: reportMissingImports=false
 # pyright: reportMissingModuleSource=false
@@ -266,14 +267,12 @@ class Bd:
 
 class Path:
     def __init__(self, *peaces):
-        peaces = to_list(peaces)
         self.list = []
+        peaces = to_list(peaces)
         self.conc(peaces)
-        # for i in args.split('/'):
-        #     self.list += i.msplit()
 
     def __repr__(self) -> str:
-        return self.str
+        return self.to_str()
 
     def __getitem__(self, item):
         return self.list[item]
@@ -282,13 +281,15 @@ class Path:
         peaces = to_list(peaces, convert=str)
         for peace in peaces:
             self.list += peace.msplit('/', '\\')
-            self.str = '/'.join(self.list)
-        return self.str
+        return self.to_str()
 
     def rmdir(self):
-        run(f'rmdir "{self.str}" /S /Q')
+        run(f'rmdir "{self.to_str()}" /S /Q')
 
-    isends = str.isends
+    def to_str(self):
+        return '/'.join(self.list)
+
+    # isends = str.isends
 
 
 def run(command, printing: bool = True):
@@ -379,3 +380,95 @@ def type_error_message(expected, get):
             {get}
         '''
     )
+
+
+# def printdir(path):
+#     @dataclass
+#     class Data:
+#         depth = 0
+
+#     def printdir_(path):
+#         path = Path(path)
+#         print(path.list[-1])
+#         dir = os.listdir(
+#             path.str
+#         )
+
+#         files = []
+#         dirs = []
+
+#         for file in dir:
+#             filepath = Path(path, file).str
+#             if os.path.isdir(filepath):
+#                 dirs.append(filepath)
+#             else:
+#                 files.append(filepath)
+
+#         def printdir__(files):
+#             length = len(files)
+#             for index, file in enumerate(files):
+
+#                 if index == length - 1:
+#                     print('└──', end=' ')
+#                 else:
+#                     print('├──', end=' ')
+
+
+#         # printdir__(files)
+#         # printdir__(dirs)
+#         pp(files)
+#         pp(dirs)
+
+#         # for dir in dirs:
+#         #     Data.depth += 1
+#         #     printdir_(dir)
+#         #     Data.depth -= 1
+
+#     printdir_(path)
+
+
+# printdir('E:/projects/betterdata/bd_libs')
+
+
+def printdir(path):
+    @dataclass
+    class Data:
+        depth = 0
+
+    def printdir_(path):
+        path = Path(path)
+        dir = os.listdir(
+            path.to_str()
+        )
+
+        files = []
+        dirs = []
+
+        for file in dir:
+            filepath = Path(path, file)
+            if os.path.isdir(filepath.to_str()):
+                dirs.append(filepath)
+            else:
+                files.append(filepath)
+
+        def printdir__(dir):
+            dir.list.rm('E:', 'projects', 'betterdata')
+
+            print('    ' * (len(dir.list) - 2), '└──', dir.list[-1])
+
+        # for i in (dirs):
+        #     printdir__(i)
+        # for i in (files):
+        #     printdir__(i)
+
+        for i in (dirs):
+            printdir__(i)
+            printdir_(i)
+
+        for i in (files):
+            printdir__(i)
+
+    printdir_(path)
+
+
+printdir('E:/projects/betterdata/bd_libs')
