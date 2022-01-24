@@ -7,6 +7,7 @@ oooooooooo.   oooooooooo.
  888    .88P   888     d88'
 o888bood8P'   o888bood8P'
 
+GMANKA LICENSE
 '''
 
 
