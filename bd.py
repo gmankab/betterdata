@@ -62,13 +62,17 @@ sys.path.append(filedir)
 def install_libs(
     link: str,
     requirements: dict,
-    libs_dir_name: str = 'libs',
-    filedir = get_file_dir(),
+    filedir = filedir,
+    dir_name: str = 'bd_libs',
+    path = None
 ):
-    libs_dir = f'{filedir}/{libs_dir_name}'
-
-    if libs_dir_name in os.listdir(filedir):
-        sys.path.append(libs_dir)
+    if path:
+        path = path.repace('\\', '/')
+        dir_name
+    else:
+        path = f'{filedir}/{dir_name}'
+    if dir_name in os.listdir(filedir):
+        sys.path.append(path)
 
     try:
         for requirement in requirements.keys():
@@ -76,13 +80,13 @@ def install_libs(
     except ImportError:
         print('downloadings libs...')
 
-        if libs_dir_name in os.listdir(filedir):
-            shutil.rmtree(libs_dir)
+        if dir_name in os.listdir(filedir):
+            shutil.rmtree(path)
 
-        os.mkdir(libs_dir)
+        os.mkdir(path)
 
         for requirement, files in requirements.items():
-            libdir = f'{libs_dir}/{requirement}'
+            libdir = f'{path}/{requirement}'
             os.mkdir(libdir)
             for file in files:
                 print(f'downloading {file}')
@@ -91,12 +95,13 @@ def install_libs(
                     f'{libdir}/{file}'
                 )
 
-    if libs_dir_name in os.listdir(filedir):
-        sys.path.append(libs_dir)
+    if dir_name in os.listdir(filedir):
+        sys.path.append(path)
 
 
 install_libs(
-    libs_dir_name= 'bd_libs',
+    dir_name= 'bd_libs',
+    path = '',
     link = 'https://raw.githubusercontent.com/gmankab/betterdata/main/bd_libs',
     requirements = {
         'forbiddenfruit_0_1_4': [
@@ -381,95 +386,3 @@ def type_error_message(expected, get):
             {get}
         '''
     )
-
-
-# def printdir(path):
-#     @dataclass
-#     class Data:
-#         depth = 0
-
-#     def printdir_(path):
-#         path = Path(path)
-#         print(path.list[-1])
-#         dir = os.listdir(
-#             path.str
-#         )
-
-#         files = []
-#         dirs = []
-
-#         for file in dir:
-#             filepath = Path(path, file).str
-#             if os.path.isdir(filepath):
-#                 dirs.append(filepath)
-#             else:
-#                 files.append(filepath)
-
-#         def printdir__(files):
-#             length = len(files)
-#             for index, file in enumerate(files):
-
-#                 if index == length - 1:
-#                     print('└──', end=' ')
-#                 else:
-#                     print('├──', end=' ')
-
-
-#         # printdir__(files)
-#         # printdir__(dirs)
-#         pp(files)
-#         pp(dirs)
-
-#         # for dir in dirs:
-#         #     Data.depth += 1
-#         #     printdir_(dir)
-#         #     Data.depth -= 1
-
-#     printdir_(path)
-
-
-# printdir('E:/projects/betterdata/bd_libs')
-
-
-def printdir(path):
-    @dataclass
-    class List:
-        depth = []
-
-    path = Path(path)
-
-    def printdir_(path):
-        dir = os.listdir(
-            path.to_str()
-        )
-
-        files = []
-        dirs = []
-
-        for file in dir:
-            filepath = Path(path, file)
-            if os.path.isdir(filepath.to_str()):
-                dirs.append(filepath)
-            else:
-                files.append(filepath)
-
-        def printdir__(dir):
-            print(''.join(List.depth), dir.list[-1])
-
-        depth = len(List.depth)
-        List.depth.append('└──')
-
-        for i in dirs:
-            printdir__(i)
-            printdir_(i)
-
-        for file in files:
-            printdir__(file)
-
-        List.depth.pop(-1)
-
-    print(path.list[-1])
-    printdir_(path)
-
-
-printdir('test_libs')
