@@ -14,9 +14,11 @@ GMANKA LICENSE
 # import only builtin libs
 from dataclasses import dataclass
 from genericpath import isdir
+from itertools import islice
 from inspect import cleandoc as cd
 from pprint import pp
 from urllib import request as r
+import zipfile
 import pathlib
 import shutil
 import pickle
@@ -70,7 +72,8 @@ def install_libs(
     requirements: list,
     filedir = filedir,
     dir_name: str = 'bd_libs',
-    path = None,
+    path: str | bool = None,
+    delete_zip: bool = True,
 ):
     if path:
         path = path.repace('\\', '/')
@@ -78,6 +81,7 @@ def install_libs(
     else:
         path = f'{filedir}/{dir_name}'
 
+    mkdir(path)
     sys.path.append(path)
 
     try:
@@ -89,15 +93,16 @@ def install_libs(
         if dir_name in os.listdir(path):
             shutil.rmtree(path)
 
-        mkdir(path)
+        zip_path = f'{path}/libs.zip'
 
         r.urlretrieve(
-            f'{link}',
-            f'{path}/libs.zip'
+            link,
+            filename = zip_path
         )
 
-    if dir_name in os.listdir(filedir):
-        sys.path.append(path)
+        zipfile.ZipFile(zip_path, 'r').extractall(path)
+        if delete_zip:
+            os.remove(zip_path)
 
 
 install_libs(
@@ -106,7 +111,9 @@ install_libs(
         'forbiddenfruit_0_1_4',
         'yml_6_0',
     ],
-    link = 'https://github.com/gmankab/betterdata/tree/main/bd_libs/',
+    link = (
+        'https://github.com/gmankab/betterdata/raw/main/bd_libs/bd_libs_v1.zip'
+    )
 )
 
 
@@ -275,7 +282,61 @@ class Path:
     def to_str(self):
         return '/'.join(self.list)
 
-    # isends = str.isends
+    def tree(
+        self,
+        level: int = -1,
+        limit_to_directories: bool = False,
+        length_limit: int = 1000,
+    ):
+        """
+        Given a directory Path object print a visual tree structure
+        This method is stolen from stack overflow
+        https://stackoverflow.com/questions/9727673
+        """
+        space = '    '
+        branch = '│   '
+        tee = '├── '
+        last = '└── '
+        dir_path = pathlib.Path(self.to_str())
+        files = 0
+        directories = 0
+
+        def inner(
+            dir_path: Path,
+            prefix: str = '',
+            level=-1
+        ):
+            nonlocal files, directories
+            if not level:
+                return  # 0, stop iterating
+            if limit_to_directories:
+                contents = [d for d in dir_path.iterdir() if d.is_dir()]
+            else:
+                contents = list(dir_path.iterdir())
+            pointers = [tee] * (len(contents) - 1) + [last]
+            for pointer, path in zip(pointers, contents):
+                if path.is_dir():
+                    yield prefix + pointer + path.name
+                    directories += 1
+                    extension = branch if pointer == tee else space
+                    yield from inner(
+                        path,
+                        prefix = prefix + extension,
+                        level = level - 1
+                    )
+                elif not limit_to_directories:
+                    yield prefix + pointer + path.name
+                    files += 1
+        result = dir_path.name
+        iterator = inner(dir_path, level=level)
+        for line in islice(iterator, length_limit):
+            result += f'\n{line}'
+        if next(iterator, None):
+            result += f'\n... length_limit, {length_limit}, reached, counted:'
+        result += f'\n\n{directories} directories'
+        if files:
+            result += f', {files} files'
+        return result
 
 
 def run(command, printing: bool = True):
