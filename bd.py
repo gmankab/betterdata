@@ -76,8 +76,8 @@ def install_libs(
     else:
         path = f'{filedir}/{dir_name}'
 
-    if not isdir(dir):
-        pathlib.Path(dir).mkdir(parents=True, exist_ok=True)
+    if not isdir(path):
+        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
     sys.path.append(path)
 
     try:
@@ -109,7 +109,8 @@ install_libs(
         'yml_6_0',
     ],
     link = (
-        'https://github.com/gmankab/betterdata/raw/main/bd_libs/bd_libs_v1.zip'
+        'https://github.com/gmankab/betterdata'
+        '/raw/main/filehost/bd_libs_v1.zip'
     )
 )
 
@@ -436,4 +437,10 @@ def type_error_message(expected, get):
 
 
 def update():
-    
+    (
+        'https://raw.githubusercontent.com/gmankab/betterdata/'
+        'main/filehost/latest_working_bd.py'
+    )
+
+
+update()
