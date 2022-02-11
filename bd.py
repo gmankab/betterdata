@@ -88,7 +88,7 @@ def install_libs(
         for requirement in requirements:
             __import__(requirement)
     except ImportError:
-        print('downloadings libs...')
+        print('Downloading requirements for betterdata...')
 
         if dir_name in os.listdir(path):
             shutil.rmtree(path)
@@ -103,6 +103,7 @@ def install_libs(
         zipfile.ZipFile(zip_path, 'r').extractall(path)
         if delete_zip:
             os.remove(zip_path)
+        print('Done.')
 
 
 install_libs(

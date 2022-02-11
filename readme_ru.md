@@ -1,10 +1,10 @@
-## BetterData [![version](svg/version.svg)](https://github.com/gmankab/betterdata) [![python](svg/python.svg)](https://www.python.org)
+# BetterData [![version](svg/version.svg)](https://github.com/gmankab/betterdata) [![python](svg/python.svg)](https://www.python.org)
 
 [![telegram](svg/telegram.svg)](https://t.me/gmanka)
 [![discord](svg/discord.svg)](https://discordapp.com/users/396578935540023296)
 [![github](svg/github.svg)](https://github.com/gmankab/betterdata)
 
-```
+```text
 oooooooooo.   oooooooooo.
 `888'   `Y8b  `888'   `Y8b
  888     888   888      888
@@ -15,18 +15,18 @@ o888bood8P'   o888bood8P'
 
 ```
 
-### [Докумениация на английском](https://github.com/gmankab/betterdata/blob/main/readme.md)
-### [Documentation in english](https://github.com/gmankab/betterdata/blob/main/readme.md)
+[Документация на английском](https://github.com/gmankab/betterdata/blob/main/readme.md)
 
+[Documentation in english](https://github.com/gmankab/betterdata/blob/main/readme.md)
 
 ## Оглавление
+
 - [Принципы](#принципы)
 - [Документация](#документация)
   - [Функции](#функции)
     - [install_libs](#install_libs)
 
 ## Принципы
-
 
 - Портативность
 - Минимальный вес
@@ -78,14 +78,16 @@ pip по следующим причинам:
 не конфликтует с pip, и если он вам нужен,
 вы можете продолжать его использовать.
 
-
 ## Установка
-Т. к. я не люблю pip, сейчас скачать betterdeta
+
+Т. к. я не люблю pip, сейчас скачать betterdata
 можно только со страницы
 [github releases](https://github.com/gmankab/betterdata/releases).
-Тем не менее, в будущем
-возможно betterdata можно будет
-установить через pip.
+Возможно в будущем
+betterdata можно будет
+установить через pip,
+когда я найду время этим заняться.
+
 Библиотека betterdata состоит
 из всего одного python файла,
 который автоматически установит
@@ -100,30 +102,37 @@ pip по следующим причинам:
 называться `project`, а файл
 вашего проекта `main.py`.
 Тогда папка проекта должна
-выглядеть вот так,
-далее все папки буду помечать зеленым цветом:
+выглядеть вот так:
+
 ```diff
 + project/
   ├── main.py
   └── bd.py
 ```
+
+Я пометил папку зеленым цветом,
+чтобы папки было удобнее
+отличать от файлов.
+
 Откройте `main.py` и импортируйте
 в него библиотеку betterdata:
-```
+
+```py
 import bd
 ```
-После первого запуска вы сразу увидите,
-как bettedrata начала скачивать
-свои зависимости:
-```
-Downloading requirements for betterdata...
 
-forbiddenfruit_0_1_4/__init__.py
-yml_6_0/__init__.py
-yml_6_0/composer.py
+После первого запуска вы сразу увидите,
+как betterdata начала скачивать
+свои зависимости:
+
+```text
+Downloading requirements for betterdata...
+Done.
 ```
+
 После этого в папке вашего проекта
 появится еще одна папка:
+
 ```diff
 + project/
   ├── main.py
@@ -133,39 +142,18 @@ yml_6_0/composer.py
       │   └── __init__.py
 +     └── yml_6_0/
           ├── __init__.py
-          └── composer.py
+          ├── composer.py
+          └── <много других файлов...>
 ```
+
 После этого, если хотите, файл `bd.py` можно будет
 перенести в папку `bd_libs`, а папку
 переименовать как вам нравится.
-Для наглядности я переименую ее в `betterdata`.
-Теперь ваш проект будет выглядеть так:
-```diff
-+ project/
-  ├── main.py
-+ └── betterdata/
-      ├── bd.py
-+     ├── forbiddenfruit_0_1_4/
-      │   └── __init__.py
-+     └── yml_6_0/
-          ├── __init__.py
-          └── composer.py
-```
-Теперь запуск файла main.py выдаст вам ошибку:
-```
-тут будет ошибка
-```
-Чтобы ее пофиксить, отредактируйте файл main.py:
-```
-
-```
-
 
 ## Документация
 
-### функции
+### install_libs
 
-#### install_libs
 ```python
 bd.install_libs()
 ```
