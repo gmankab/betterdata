@@ -90,7 +90,7 @@ def install_libs(
     except ImportError:
         print('Downloading requirements for betterdata...')
 
-        if dir_name in os.listdir(path):
+        if isdir(path):
             shutil.rmtree(path)
 
         zip_path = f'{path}/libs.zip'
@@ -271,6 +271,9 @@ class Path:
     def __getitem__(self, item):
         return self.list[item]
 
+    def to_str(self):
+        return '/'.join(self.list)
+
     def conc(self, *peaces):
         peaces = to_list(peaces, convert=str)
         for peace in peaces:
@@ -278,10 +281,12 @@ class Path:
         return self.to_str()
 
     def rmdir(self):
-        run(f'rmdir "{self.to_str()}" /S /Q')
+        if isdir(self.to_str()):
+            shutil.rmtree(self.to_str())
 
-    def to_str(self):
-        return '/'.join(self.list)
+    def rm(self):
+        if os.path.isfile(self.to_str()):
+            os.remove(self.to_str())
 
     def tree(
         self,
