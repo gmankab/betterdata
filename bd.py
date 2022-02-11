@@ -76,8 +76,6 @@ def install_libs(
     else:
         path = f'{filedir}/{dir_name}'
 
-    if not isdir(path):
-        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
     sys.path.append(path)
 
     try:
@@ -89,6 +87,9 @@ def install_libs(
         if isdir(path):
             shutil.rmtree(path)
 
+        if not isdir(path):
+            pathlib.Path(path).mkdir(parents=True, exist_ok=True)
+
         zip_path = f'{path}/libs.zip'
 
         r.urlretrieve(
@@ -99,8 +100,13 @@ def install_libs(
         zipfile.ZipFile(zip_path, 'r').extractall(path)
         if delete_zip:
             os.remove(zip_path)
+
+        sys.path.append(path)
+        print(path)
         print('Done.')
 
+
+print(sys.path)
 
 install_libs(
     dir_name = 'bd_libs',
@@ -114,10 +120,13 @@ install_libs(
     )
 )
 
+print(sys.path)
+import time
 
+time.sleep(5)
 # import non-builtin libs
-from forbiddenfruit_0_1_4 import curse
 import yml_6_0 as yml
+from forbiddenfruit_0_1_4 import curse
 
 
 # noqa: E731
