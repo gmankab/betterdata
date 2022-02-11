@@ -13,6 +13,7 @@ GMANKA LICENSE
 
 # import only builtin libs
 from dataclasses import dataclass
+from genericpath import isdir
 from inspect import cleandoc as cd
 from pprint import pp
 from urllib import request as r
@@ -55,78 +56,57 @@ def get_file_dir():
     return str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
 
 
+def mkdir(dir):
+    if not isdir(dir):
+        pathlib.Path(dir).mkdir(parents=True, exist_ok=True)
+
+
 filedir = get_file_dir()
 sys.path.append(filedir)
 
 
 def install_libs(
     link: str,
-    requirements: dict,
+    requirements: list,
     filedir = filedir,
     dir_name: str = 'bd_libs',
-    path = None
+    path = None,
 ):
     if path:
         path = path.repace('\\', '/')
-        dir_name
+        dir_name = path.rsplit('/', 1)[-1]
     else:
         path = f'{filedir}/{dir_name}'
-    if dir_name in os.listdir(filedir):
-        sys.path.append(path)
+
+    sys.path.append(path)
 
     try:
-        for requirement in requirements.keys():
+        for requirement in requirements:
             __import__(requirement)
     except ImportError:
         print('downloadings libs...')
 
-        if dir_name in os.listdir(filedir):
+        if dir_name in os.listdir(path):
             shutil.rmtree(path)
 
-        os.mkdir(path)
+        mkdir(path)
 
-        for requirement, files in requirements.items():
-            libdir = f'{path}/{requirement}'
-            os.mkdir(libdir)
-            for file in files:
-                print(f'downloading {file}')
-                r.urlretrieve(
-                    f'{link}/{requirement}/{file}',
-                    f'{libdir}/{file}'
-                )
+        r.urlretrieve(
+            f'{link}',
+            f'{path}/libs.zip'
+        )
 
     if dir_name in os.listdir(filedir):
         sys.path.append(path)
 
 
 install_libs(
-    dir_name= 'bd_libs',
-    path = '',
-    link = 'https://raw.githubusercontent.com/gmankab/betterdata/main/bd_libs',
-    requirements = {
-        'forbiddenfruit_0_1_4': [
-            '__init__.py',
-        ],
-        'yml_6_0': [
-            'composer.py',
-            'constructor.py',
-            'cyaml.py',
-            'dumper.py',
-            'emitter.py',
-            'error.py',
-            'events.py',
-            'loader.py',
-            'nodes.py',
-            'parser.py',
-            'reader.py',
-            'representer.py',
-            'resolver.py',
-            'scanner.py',
-            'serializer.py',
-            'tokens.py',
-            '__init__.py'
-        ]
-    }
+    dir_name = 'bd_libs',
+    requirements = [
+        'forbiddenfruit_0_1_4',
+        'yml_6_0',
+    ],
+    link = 'https://github.com/gmankab/betterdata/tree/main/bd_libs/',
 )
 
 
