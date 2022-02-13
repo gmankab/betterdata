@@ -76,7 +76,7 @@ def install_libs(
     else:
         path = f'{filedir}/{dir_name}'
 
-    sys.path.append(path)
+    sys.path.insert(1, path)
 
     try:
         for requirement in requirements:
@@ -106,7 +106,7 @@ def install_libs(
         if delete_zip:
             os.remove(zip_path)
 
-        sys.path.append(path)
+        sys.path.insert(1, path)
 
         print('Done.')
 
@@ -116,8 +116,8 @@ print(sys.path)
 install_libs(
     dir_name = 'bd_libs',
     requirements = [
-        'forbiddenfruit-0_1_4',
-        'yml-6_0',
+        'forbiddenfruit_0_1_4',
+        'yml_6_0',
     ],
     link = (
         'https://github.com/gmankab/betterdata'
