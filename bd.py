@@ -120,7 +120,7 @@ install_libs(
         '/raw/main/filehost/bd_libs-v1.zip'
     ),
 
-    main_file_name = 'betterdata'
+    message_1 = 'Downloading requirements for betterdata...'
 )
 
 
