@@ -22,6 +22,7 @@ import zipfile
 import pathlib
 import shutil
 import pickle
+import time
 import sys
 import os
 
@@ -121,9 +122,8 @@ install_libs(
 )
 
 print(sys.path)
-import time
 
-time.sleep(5)
+
 # import non-builtin libs
 import yml_6_0 as yml
 from forbiddenfruit_0_1_4 import curse
