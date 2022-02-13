@@ -434,9 +434,10 @@ def run(command, printing: bool = True):
         return os.popen(command).read()
 
 
-def update_to_latest():
-    (
-        'https://github.com/gmankab/betterdata/raw/main/latest_release/bd.py'
+def update_bd_to_latest():
+    latest_link = (
+        'https://github.com/gmankab/betterdata'
+        '/raw/main/latest_release/bd.py'
     )
 
 
@@ -444,4 +445,4 @@ def check_for_update():
     pass  # TODO
 
 
-update_to_latest()
+update_bd_to_latest()
