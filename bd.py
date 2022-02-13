@@ -60,7 +60,6 @@ def get_file_dir():
 
 
 filedir = get_file_dir()
-sys.path.append(filedir)
 
 
 def install_libs(
@@ -83,6 +82,11 @@ def install_libs(
         for requirement in requirements:
             __import__(requirement)
     except ImportError:
+
+        while path in sys.path:
+            sys.path.remove(path)
+        print(sys.path)
+
         print('Downloading requirements for betterdata...')
 
         if isdir(path):
@@ -103,7 +107,7 @@ def install_libs(
             os.remove(zip_path)
 
         sys.path.append(path)
-        print(path)
+
         print('Done.')
 
 
@@ -112,21 +116,21 @@ print(sys.path)
 install_libs(
     dir_name = 'bd_libs',
     requirements = [
-        'forbiddenfruit_0_1_4',
-        'yml_6_0',
+        'forbiddenfruit-0_1_4',
+        'yml-6_0',
     ],
     link = (
         'https://github.com/gmankab/betterdata'
-        '/raw/main/filehost/bd_libs_v1.zip'
+        '/raw/main/filehost/bd_libs-v1.zip'
     )
 )
 
 print(sys.path)
 
-
+print(os.listdir(sys.path[-1]))
 # import non-builtin libs
-import yml_6_0 as yml
 from forbiddenfruit_0_1_4 import curse
+import yml_6_0 as yml
 
 
 # noqa: E731
