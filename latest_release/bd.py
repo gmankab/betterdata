@@ -17,12 +17,9 @@ https://github.com/gmankab/licence
 
 # import only builtin libs
 from dataclasses import dataclass
-from email.policy import default
-from genericpath import isdir
 from itertools import islice
 from inspect import cleandoc as cd
 from pprint import pp
-from types import NoneType
 from urllib import request as r
 import pathlib
 import shutil
@@ -34,34 +31,39 @@ import os
 
 @dataclass
 class Version:
-    # the betterdata library was written in this version of python,
-    # on lower python versions it will not work
-    python_required = '3.10.1'
+    # version of betterdata
+    betterdata = '22.0'
 
-    # stable work is guaranteed only on python versions listed here:
+    # this version of betterdata was tested
+    # only on python versions listed here:
     python_tested_on = [
-        '3.10.1'
+        '3.10.2'
     ]
 
-    betterdata = '22.0'
+    # on lower python versions
+    # betterdata will not work
+    minimal_python = '3.10.0'
 
 
 @dataclass
 class Contacts:
+    discord  = 'gmanka#3806'
     telegram = 'https://t.me/gmanka'
-    discord = 'gmanka#3806'
-    github = 'https://github.com/gmankab/betterdata'
+    license  = 'https://github.com/gmankab/licence'
+    github   = 'https://github.com/gmankab/betterdata'
 
 
 @dataclass
 class Donate:
     DonationAlerts = 'https://donationalerts.com/r/gmanka'
     tinkoff = '5536 9139 9403 2981'
-    sber = '5336 6903 8044 6684'
+    sber    = '5336 6903 8044 6684'
 
 
 def get_file_dir() -> str:
-    return str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
+    return str(
+        pathlib.Path(__file__).parent.resolve()
+    ).replace('\\', '/')
 
 
 filedir = get_file_dir()
@@ -70,7 +72,7 @@ filedir = get_file_dir()
 def install_libs(
     link: str,
     requirements: list,
-    path: str | NoneType = None,
+    path: str = None,
     message_1: str = f'Downloading requirements \
         for {os.path.basename(__file__)}...',
     message_2: str = 'Done. restarting...'
@@ -90,7 +92,7 @@ def install_libs(
 
         print(message_1)
 
-        if path and not isdir(path):
+        if path and not os.Path.isdir(path):
             pathlib.Path(path).mkdir(parents=True, exist_ok=True)
 
         if os.path.isfile(zip_path):
@@ -116,8 +118,8 @@ install_libs(
     ],
 
     link = (
-        'https://github.com/gmankab/betterdata'
-        '/raw/main/filehost/bd_libs-v1.zip'
+        'https://github.com/gmankab/betterdata/'
+        'blob/main/archive/bd_libs-v1.zip'
     ),
 
     message_1 = 'Downloading requirements for betterdata...'
@@ -147,7 +149,7 @@ def check_python_vers(required_vers):
         )
 
 
-check_python_vers(required_vers=Version.python_required)
+check_python_vers(required_vers=Version.minimal_python)
 
 
 def to_list(*args, convert=None):
@@ -266,6 +268,56 @@ class Bd:
         return vars(self)
 
 
+def dump(data, name: str = None):
+    if not name:
+        if isinstance(data, dict):
+            if 'name' not in data.keys():
+                raise NameExpectedError(NameExpectedError.text(data))
+            name = data['name']
+        else:
+            if 'name' not in vars(data).keys():
+                raise NameExpectedError(NameExpectedError.text(data))
+            name = data.name
+    extension = name.split('.')[-1]
+    match extension:
+        case 'pickle':
+            pickle.dump(data, open(f'data/{name}', 'wb'))
+        case 'yml':
+            if not isinstance(data, dict):
+                data = data.to_dict
+            yml.dump(data, open(f'data/{name}', 'w'))
+        case _:
+            raise UnsupportedExtensionError(
+                "only 'pickle' and 'yml' extensions supported"
+            )
+
+
+def load(name: str, ins: str = 'bd'):  # ins = instance or type
+    extension = name.split('.')[-1]
+    match extension:
+        case 'pickle':
+            data = pickle.load(open(f'data/{name}', 'rb'))
+            data.name = name
+            return data
+        case 'yml ':
+            data = yml.load(
+                open(f'data/{name}', 'r').read(),
+                Loader=yml.Loader
+            )
+            data['name'] = name
+            match ins.lower():
+                case 'dict' | 'dc' | 'dct':
+                    return data
+                case 'bd' | 'betterdata':
+                    return Bd(data)
+                case _:
+                    raise TypeError("Only 'bd' and 'dct' instances supported")
+        case _:
+            raise UnsupportedExtensionError(
+                "only 'pickle' and 'yml' extensions supported"
+            )
+
+
 class Path:
     def __init__(self, *peaces):
         self.list = []
@@ -288,11 +340,11 @@ class Path:
         return self.to_str()
 
     def mkdir():
-        if not isdir(dir):
+        if not os.Path.isdir(dir):
             pathlib.Path(dir).mkdir(parents=True, exist_ok=True)
 
     def rmdir(self):
-        if isdir(self.to_str()):
+        if os.Path.isdir(self.to_str()):
             shutil.rmtree(self.to_str())
 
     def rm(self):
@@ -358,7 +410,7 @@ class Path:
 
 
 def run(command, printing: bool = True):
-    command_type = typestr(command)
+    command_type = type(command).__name__
     match command_type:
         case 'str':
             pass
@@ -382,75 +434,9 @@ def run(command, printing: bool = True):
         return os.popen(command).read()
 
 
-def dump(data, name: str = None):
-    if not name:
-        if isinstance(data, dict):
-            if 'name' not in data.keys():
-                raise NameExpectedError(NameExpectedError.text(data))
-            name = data['name']
-        else:
-            if 'name' not in vars(data).keys():
-                raise NameExpectedError(NameExpectedError.text(data))
-            name = data.name
-    extension = name.split('.')[-1]
-    match extension:
-        case 'pickle':
-            pickle.dump(data, open(f'data/{name}', 'wb'))
-        case 'yml':
-            if not isinstance(data, dict):
-                data = data.to_dict
-            yml.dump(data, open(f'data/{name}', 'w'))
-        case _:
-            raise UnsupportedExtensionError(
-                "only 'pickle' and 'yml' extensions supported"
-            )
-
-
-def load(name: str, ins: str = 'bd'):  # ins = instance or type
-    extension = name.split('.')[-1]
-    match extension:
-        case 'pickle':
-            data = pickle.load(open(f'data/{name}', 'rb'))
-            data.name = name
-            return data
-        case 'yml ':
-            data = yml.load(
-                open(f'data/{name}', 'r').read(),
-                Loader=yml.Loader
-            )
-            data['name'] = name
-            match ins.lower():
-                case 'dict' | 'dc' | 'dct':
-                    return data
-                case 'bd' | 'betterdata':
-                    return Bd(data)
-                case _:
-                    raise TypeError("Only 'bd' and 'dct' instances supported")
-        case _:
-            raise UnsupportedExtensionError(
-                "only 'pickle' and 'yml' extensions supported"
-            )
-
-
-def typestr(object_):  # type name
-    return type(object_).__name__
-
-
-def gen_err_mes(expected, get):
-    return cd(
-        f'''
-        expected types:
-            {', '.join(expected)}
-        get:
-            {get}
-        '''
-    )
-
-
 def update():
     (
-        'https://raw.githubusercontent.com/gmankab/betterdata/'
-        'main/filehost/latest_working_bd.py'
+        'https://github.com/gmankab/betterdata/raw/main/latest_release/bd.py'
     )
 
 
