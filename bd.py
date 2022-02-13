@@ -449,8 +449,7 @@ def gen_err_mes(expected, get):
 
 def update():
     (
-        'https://raw.githubusercontent.com/gmankab/betterdata/'
-        'main/filehost/latest_working_bd.py'
+        'https://github.com/gmankab/betterdata/raw/main/latest_release/bd.py'
     )
 
 
