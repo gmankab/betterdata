@@ -18,7 +18,6 @@ from itertools import islice
 from inspect import cleandoc as cd
 from pprint import pp
 from urllib import request as r
-import zipfile
 import pathlib
 import shutil
 import pickle
@@ -65,51 +64,36 @@ filedir = get_file_dir()
 def install_libs(
     link: str,
     requirements: list,
-    filedir = filedir,
-    dir_name: str = 'bd_libs',
     path: str | bool = None,
     delete_zip: bool = True,
 ):
     if path:
         path = path.repace('\\', '/')
-        dir_name = path.rsplit('/', 1)[-1]
     else:
-        path = f'{filedir}/{dir_name}'
+        path = filedir
 
-    sys.path.insert(1, path)
+    zip_path = f'{path}/bd_libs.zip'
+    sys.path.append(zip_path)
 
     try:
         for requirement in requirements:
             __import__(requirement)
     except ImportError:
 
-        while path in sys.path:
-            sys.path.remove(path)
-        print(sys.path)
-
         print('Downloading requirements for betterdata...')
 
-        if isdir(path):
-            shutil.rmtree(path)
-
-        if not isdir(path):
+        if path and not isdir(path):
             pathlib.Path(path).mkdir(parents=True, exist_ok=True)
 
-        zip_path = f'{path}/libs.zip'
+        if os.is_file(zip_path):
+            os.remove(zip_path)
 
         r.urlretrieve(
             link,
             filename = zip_path
         )
 
-        zipfile.ZipFile(zip_path, 'r').extractall(path)
-        if delete_zip:
-            os.remove(zip_path)
-
-        sys.path.insert(1, path)
-
         print('Done.')
-
 
 
 print(sys.path)
@@ -126,9 +110,7 @@ install_libs(
     )
 )
 
-print(sys.path)
 
-print(os.listdir(sys.path[-1]))
 # import non-builtin libs
 from forbiddenfruit_0_1_4 import curse
 import yml_6_0 as yml
