@@ -1,4 +1,7 @@
 '''
+BETTERDATA
+https://github.com/gmankab/betterdata
+
 oooooooooo.   oooooooooo.
 `888'   `Y8b  `888'   `Y8b
  888     888   888      888
@@ -8,15 +11,18 @@ oooooooooo.   oooooooooo.
 o888bood8P'   o888bood8P'
 
 GMANKA LICENSE
+https://github.com/gmankab/licence
 '''
 
 
 # import only builtin libs
 from dataclasses import dataclass
+from email.policy import default
 from genericpath import isdir
 from itertools import islice
 from inspect import cleandoc as cd
 from pprint import pp
+from types import NoneType
 from urllib import request as r
 import pathlib
 import shutil
@@ -54,7 +60,7 @@ class Donate:
     sber = '5336 6903 8044 6684'
 
 
-def get_file_dir():
+def get_file_dir() -> str:
     return str(pathlib.Path(__file__).parent.resolve()).replace('\\', '/')
 
 
@@ -64,9 +70,11 @@ filedir = get_file_dir()
 def install_libs(
     link: str,
     requirements: list,
-    path: str | bool = None,
-    delete_zip: bool = True,
-):
+    path: str | NoneType = None,
+    message_1: str = f'Downloading requirements \
+        for {os.path.basename(__file__)}...',
+    message_2: str = 'Done. restarting...'
+) -> None:
     if path:
         path = path.repace('\\', '/')
     else:
@@ -80,12 +88,12 @@ def install_libs(
             __import__(requirement)
     except ImportError:
 
-        print('Downloading requirements for betterdata...')
+        print(message_1)
 
         if path and not isdir(path):
             pathlib.Path(path).mkdir(parents=True, exist_ok=True)
 
-        if os.is_file(zip_path):
+        if os.path.isfile(zip_path):
             os.remove(zip_path)
 
         r.urlretrieve(
@@ -93,21 +101,26 @@ def install_libs(
             filename = zip_path
         )
 
-        print('Done.')
+        print(message_2)
 
+        os.system(
+            f'{sys.executable} {__file__}'
+        )
+        sys.exit()
 
-print(sys.path)
 
 install_libs(
-    dir_name = 'bd_libs',
     requirements = [
         'forbiddenfruit_0_1_4',
         'yml_6_0',
     ],
+
     link = (
         'https://github.com/gmankab/betterdata'
         '/raw/main/filehost/bd_libs-v1.zip'
-    )
+    ),
+
+    main_file_name = 'betterdata'
 )
 
 
@@ -116,6 +129,7 @@ from forbiddenfruit_0_1_4 import curse
 import yml_6_0 as yml
 
 
+# disable unnecessary items in linters:
 # noqa: E731
 # noqa: F821
 # noqa: F841
@@ -292,20 +306,21 @@ class Path:
         length_limit: int = 1000,
     ):
         """
-        Given a directory Path object print a visual tree structure
+        Printing a visual tree structure for given dir
         This method is stolen from stack overflow
         https://stackoverflow.com/questions/9727673
+        I didn't write this method myself
         """
-        space = '    '
         branch = '│   '
-        tee = '├── '
-        last = '└── '
+        tee    = '├── '
+        last   = '└── '
+        space  = '    '
         dir_path = pathlib.Path(self.to_str())
         files = 0
         directories = 0
 
         def inner(
-            dir_path: Path,
+            dir_path: pathlib.Path,
             prefix: str = '',
             level=-1
         ):
@@ -421,7 +436,7 @@ def typestr(object_):  # type name
     return type(object_).__name__
 
 
-def type_error_message(expected, get):
+def gen_err_mes(expected, get):
     return cd(
         f'''
         expected types:
