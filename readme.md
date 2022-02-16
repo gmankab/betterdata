@@ -4,7 +4,7 @@
 [![discord](svg/discord.svg)](https://discordapp.com/users/396578935540023296)
 [![github](svg/github.svg)](https://github.com/gmankab/betterdata)
 
-```
+```text
 oooooooooo.   oooooooooo.
 `888'   `Y8b  `888'   `Y8b
  888     888   888      888
@@ -15,9 +15,9 @@ o888bood8P'   o888bood8P'
 
 ```
 
-## [Documentation in russian](https://github.com/gmankab/betterdata/blob/main/readme_ru.md)
-## [Документация на русском](https://github.com/gmankab/betterdata/blob/main/readme_ru.md)
+## Languages
+
+- [english, OPENED NOW](readme.md)
+- [русский, russian](readme_ru.md)
 
 documentation in english will be soon...
-
-

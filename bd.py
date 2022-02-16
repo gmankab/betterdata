@@ -14,6 +14,17 @@ GMANKA LICENSE
 https://github.com/gmankab/licence
 '''
 
+# disable unnecessary items in linters:
+# noqa: E731
+# noqa: F821
+# noqa: F841
+# pyright: reportUndefinedVariable=false
+# pyright: reportMissingImports=false
+# pyright: reportMissingModuleSource=false
+# pylint: disable=useless-suppression
+# pylint: disable=import-outside-toplevel
+# pylint: disable=import-error
+# pylint: disable=unused-import
 
 # import only builtin libs
 from dataclasses import dataclass
@@ -47,10 +58,19 @@ class Version:
 
 @dataclass
 class Contacts:
-    discord  = 'gmanka#3806'
-    telegram = 'https://t.me/gmanka'
-    license  = 'https://github.com/gmankab/licence'
-    github   = 'https://github.com/gmankab/betterdata'
+    telegram = '@gmanka'
+    discord = 'gmanka#3806'
+    github = 'gmankab'
+
+
+@dataclass
+class Links:
+    telegram  = 'https://t.me/gmanka'
+    discord   = 'https://discord.com/users/396578935540023296'
+    github    = 'https://github.com/gmankab/betterdata'
+    license   = 'https://github.com/gmankab/licence'
+    latest_bd = 'https://github.com/gmankab/betterdata/raw/main/latest_release/bd.py'
+    libs      = 'https://github.com/gmankab/betterdata/blob/main/archive/bd_libs-v1.zip'
 
 
 @dataclass
@@ -75,7 +95,7 @@ def install_libs(
     path: str = None,
     message_1: str = f'Downloading requirements \
         for {os.path.basename(__file__)}...',
-    message_2: str = 'Done. restarting...'
+    message_2: str = 'Done. Restarting...'
 ) -> None:
     if path:
         path = path.repace('\\', '/')
@@ -117,11 +137,7 @@ install_libs(
         'yml_6_0',
     ],
 
-    link = (
-        'https://github.com/gmankab/betterdata/'
-        'blob/main/archive/bd_libs-v1.zip'
-    ),
-
+    link = Links.libs,
     message_1 = 'Downloading requirements for betterdata...'
 )
 
@@ -129,17 +145,6 @@ install_libs(
 # import non-builtin libs
 from forbiddenfruit_0_1_4 import curse
 import yml_6_0 as yml
-
-
-# disable unnecessary items in linters:
-# noqa: E731
-# noqa: F821
-# noqa: F841
-# pyright: reportUndefinedVariable=false
-# pyright: reportMissingImports=false
-# pyright: reportMissingModuleSource=false
-# pylint: disable=import-outside-toplevel
-# pylint: disable=import-error
 
 
 def check_python_vers(required_vers):
@@ -435,9 +440,9 @@ def run(command, printing: bool = True):
 
 
 def update_bd_to_latest():
-    latest_link = (
-        'https://github.com/gmankab/betterdata'
-        '/raw/main/latest_release/bd.py'
+    r.urlretrieve(
+        Links.latest_bd,
+        # filename =
     )
 
 
