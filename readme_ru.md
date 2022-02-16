@@ -18,7 +18,7 @@ o888bood8P'   o888bood8P'
 ## Язык
 
 - [english](readme.md)
-- [русский, russian, [ОТКРЫТ СЕЙЧАС]](readme_ru.md)
+- [русский, russian [открыт сейчас]](readme_ru.md)
 
 ## Оглавление
 
