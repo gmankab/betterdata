@@ -414,29 +414,14 @@ class Path:
         return result
 
 
-def run(command, printing: bool = True):
-    command_type = type(command).__name__
-    match command_type:
-        case 'str':
-            pass
-        case 'list':
-            command = ' '.join(command)
-        case _:
-            raise TypeError(
-                cd(
-                    f'''
-                    expected types of 'command' argument:
-                        str, list
-                    get:
-                        {command_type}
-                    '''
-                )
-            )
-
-    if printing:
-        os.system(command)
+def run(commands, silent: bool = False):
+    commands = to_list(commands)
+    if silent:
+        for command in commands:
+            os.system(command)
     else:
-        return os.popen(command).read()
+        for command in commands:
+            yield answer.append(os.popen(command).read())
 
 
 def update_bd_to_latest():
@@ -448,6 +433,3 @@ def update_bd_to_latest():
 
 def check_for_update():
     pass  # TODO
-
-
-update_bd_to_latest()
