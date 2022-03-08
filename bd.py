@@ -14,18 +14,6 @@ GMANKA LICENSE
 https://github.com/gmankab/licence
 '''
 
-# disable unnecessary items in linters:
-# noqa: E731
-# noqa: F821
-# noqa: F841
-# pyright: reportUndefinedVariable=false
-# pyright: reportMissingImports=false
-# pyright: reportMissingModuleSource=false
-# pylint: disable=useless-suppression
-# pylint: disable=import-outside-toplevel
-# pylint: disable=import-error
-# pylint: disable=unused-import
-
 # import only builtin libs
 from dataclasses import dataclass
 from itertools import islice
@@ -69,8 +57,14 @@ class Links:
     discord   = 'https://discord.com/users/396578935540023296'
     github    = 'https://github.com/gmankab/betterdata'
     license   = 'https://github.com/gmankab/licence'
-    latest_bd = 'https://github.com/gmankab/betterdata/raw/main/latest_release/bd.py'
-    libs      = 'https://github.com/gmankab/betterdata/blob/main/archive/bd_libs-v1.zip'
+    latest_bd = (
+        'https://github.com/gmankab/betterdata'
+        '/raw/main/latest_release/bd.py'
+    )
+    libs = (
+        'https://github.com/gmankab/betterdata'
+        '/raw/main/archive/bd_libs-v1.zip'
+    )
 
 
 @dataclass
@@ -86,7 +80,7 @@ def get_file_dir() -> str:
     ).replace('\\', '/')
 
 
-filedir = get_file_dir()
+FILEDIR = get_file_dir()
 
 
 def install_libs(
@@ -100,7 +94,7 @@ def install_libs(
     if path:
         path = path.repace('\\', '/')
     else:
-        path = filedir
+        path = FILEDIR
 
     zip_path = f'{path}/bd_libs.zip'
     sys.path.append(zip_path)
@@ -112,15 +106,16 @@ def install_libs(
 
         print(message_1)
 
-        if path and not os.Path.isdir(path):
+        if path and not os.path.isdir(path):
             pathlib.Path(path).mkdir(parents=True, exist_ok=True)
 
         if os.path.isfile(zip_path):
             os.remove(zip_path)
 
+
         r.urlretrieve(
             link,
-            filename = zip_path
+            filename = zip_path,
         )
 
         print(message_2)
@@ -194,12 +189,21 @@ def modify_builtin_functions():
             self = self.replace(i, '')
         return self
 
-    def str_rmborders(self, *borders):
-        for border in to_list(borders):
-            while self[:len(border)] == border:
-                self = self[len(border):]
-            while self[-len(border):] == '\\':
-                self = self[:-len(border)]
+    def str_rmborders(self, *borders, rm_whitespaces = True):
+        removed = True
+        while removed:
+            removed = False
+            if rm_whitespaces:
+                borders += (' ', '\n')
+            for border in to_list(borders):
+                length = len(border)
+                while self[:length] == border:
+                    self = self[length:]
+                    removed = True
+                while self[-length:] == border:
+                    self = self[:-length]
+                    removed = True
+        return self
 
     def str_msplit(self, *delims, limit=None):
         if not limit and isinstance(delims[-1], int):
@@ -259,6 +263,7 @@ class Bd:
     @DynamicAttrs
     disabling pycharm "unresolved attribute" warnings
     """
+
     def __init__(self, data: dict, name: str = None):
         if name:
             data['name'] = name
@@ -344,12 +349,12 @@ class Path:
             self.list += peace.msplit('/', '\\')
         return self.to_str()
 
-    def mkdir():
-        if not os.Path.isdir(dir):
-            pathlib.Path(dir).mkdir(parents=True, exist_ok=True)
+    def mkdir(self):
+        if not os.path.isdir(self):
+            pathlib.Path(self).mkdir(parents=True, exist_ok=True)
 
     def rmdir(self):
-        if os.Path.isdir(self.to_str()):
+        if os.path.isdir(self.to_str()):
             shutil.rmtree(self.to_str())
 
     def rm(self):
@@ -363,7 +368,7 @@ class Path:
         length_limit: int = 1000,
     ):
         """
-        Printing a visual tree structure for given dir
+        Print a visual tree structure for given dir
         This method is stolen from stack overflow
         https://stackoverflow.com/questions/9727673
         I didn't write this method myself
@@ -416,19 +421,18 @@ class Path:
 
 def run(commands, silent: bool = False):
     commands = to_list(commands)
-    if silent:
+    if not silent:
         for command in commands:
             os.system(command)
-    else:
-        for command in commands:
-            yield answer.append(os.popen(command).read())
+        return True
 
+    answer = []
+    for command in commands:
+        answer.append(os.popen(command).read())
+    if len(answer) == 1:
+        return answer[0]
 
-def update_bd_to_latest():
-    r.urlretrieve(
-        Links.latest_bd,
-        # filename =
-    )
+    return answer
 
 
 def check_for_update():

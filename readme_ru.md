@@ -66,6 +66,38 @@ pip по следующим причинам:
 import bd
 ```
 
+Попробуйте запустить файл.
+
+<br />
+<details>
+  <summary>
+    Получаете ошибку "No module named 'bd'"?
+  </summary>
+  <br />
+  Если вы получаете ошибку
+
+  ```py
+  ModuleNotFoundError: No module named 'bd'
+  ```
+
+  Для начала убедитесь, что `main.py` и `bd.py` находятся в одной папке. Если все так, но ошибка все равно появляется, значит вы запускаете `main.py` не из папки `project/`. Вам нужно либо [перейти в папку](https://www.google.com/search?q=how+to+change+folder+in+terminal) `project/` в вашем терминале и запустить `main.py` оттуда, либо добавить папку `project/` в sys.path с помощью этого кода:
+
+  ```py
+  import pathlib
+  import sys
+
+  sys.path.append(
+      str(pathlib.Path(__file__).parent)
+  )
+
+  import bd
+  ```
+
+  Теперь файл должен запускаться без ошибок.
+
+</details>
+<br />
+
 После первого запуска вы сразу увидите, как betterdata начала скачивать свои зависимости:
 
 ```text
