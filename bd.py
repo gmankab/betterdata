@@ -373,7 +373,7 @@ class Path:
         Print a visual tree structure for given dir
         This method is stolen from stack overflow
         https://stackoverflow.com/questions/9727673
-        I didn't write this method myself
+        But I rewrote it a bit.
         """
         branch = '│   '
         tee    = '├── '
@@ -417,11 +417,15 @@ class Path:
                     yield little_space + prefix + pointer + path.name
                     files += 1
         result = plus + dir_path.name + after_dir
+        if md_diff:
+            result = '```diff\n' + result
         iterator = inner(dir_path, level=level)
         for line in islice(iterator, length_limit):
             result += f'\n{line}'
         if next(iterator, None):
             result += f'\n... length_limit, {length_limit}, reached, counted:'
+        if md_diff:
+            result += '\n```'
         result += f'\n\n{directories} directories'
         if files:
             result += f', {files} files'
