@@ -189,3 +189,13 @@ pip install requests -t requests_dir
 ```
 
 Красным цветом помечен открытый архив, а зеленым - папки, которые мы положили в этот архив.
+
+Теперь папку `requests_dir` можно удалить, а папка проекта должна выглядеть вот так:
+
+```diff
++ project/
+  ├── bd.py
+  ├── bd_libs.zip
+  ├── main.py
+  └── project_libs.zip
+```
