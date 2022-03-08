@@ -112,7 +112,6 @@ def install_libs(
         if os.path.isfile(zip_path):
             os.remove(zip_path)
 
-
         r.urlretrieve(
             link,
             filename = zip_path,
@@ -366,6 +365,9 @@ class Path:
         level: int = -1,
         limit_to_directories: bool = False,
         length_limit: int = 1000,
+        ignore: list = [],
+        md_diff: bool = False,
+        after_dir = '/'
     ):
         """
         Print a visual tree structure for given dir
@@ -376,7 +378,9 @@ class Path:
         branch = '│   '
         tee    = '├── '
         last   = '└── '
-        space  = '    '
+        plus   = '+ ' if md_diff else ""
+        big_space  = '    '
+        little_space = '  ' if md_diff else ""
         dir_path = pathlib.Path(self.to_str())
         files = 0
         directories = 0
@@ -393,21 +397,26 @@ class Path:
                 contents = [d for d in dir_path.iterdir() if d.is_dir()]
             else:
                 contents = list(dir_path.iterdir())
+            for content in contents:
+                for i in ignore:
+                    if i in str(content):
+                        while content in contents:
+                            contents.remove(content)
             pointers = [tee] * (len(contents) - 1) + [last]
             for pointer, path in zip(pointers, contents):
                 if path.is_dir():
-                    yield prefix + pointer + path.name
+                    yield plus + prefix + pointer + path.name + after_dir
                     directories += 1
-                    extension = branch if pointer == tee else space
+                    extension = branch if pointer == tee else big_space
                     yield from inner(
                         path,
                         prefix = prefix + extension,
                         level = level - 1
                     )
                 elif not limit_to_directories:
-                    yield prefix + pointer + path.name
+                    yield little_space + prefix + pointer + path.name
                     files += 1
-        result = dir_path.name
+        result = plus + dir_path.name + after_dir
         iterator = inner(dir_path, level=level)
         for line in islice(iterator, length_limit):
             result += f'\n{line}'
