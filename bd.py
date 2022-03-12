@@ -84,30 +84,46 @@ FILEDIR = get_file_dir()
 
 
 def install_libs(
-    link: str,
     requirements: list,
-    path: str = None,
+    zip_name: str,
+    link: str = None,
+    folder_path: str = None,
     message_1: str = f'Downloading requirements \
         for {os.path.basename(__file__)}...',
     message_2: str = 'Done. Restarting...'
 ) -> None:
-    if path:
-        path = path.repace('\\', '/')
-    else:
-        path = FILEDIR
 
-    zip_path = f'{path}/bd_libs.zip'
+    if folder_path:
+        if not link and not os.path.isdir(folder_path):
+            raise FileExistsError(
+                cd(
+                    f'''
+                    Directory "{folder_path}" not  found.\n
+                    Try specify other dir,
+                    or don't specify it,
+                    if you want to use your file folder
+                    '''
+                )
+            )
+    else:
+        folder_path = FILEDIR
+
+    zip_path = f'{folder_path}/bd_libs.zip'
     sys.path.append(zip_path)
 
     try:
         for requirement in requirements:
             __import__(requirement)
-    except ImportError:
+    except ImportError as error:
+        if not link:
+            raise ImportError(
+                f'No "{requirement}" lib in specified zip'
+            ) from error
 
         print(message_1)
 
-        if path and not os.path.isdir(path):
-            pathlib.Path(path).mkdir(parents=True, exist_ok=True)
+        if folder_path and not os.path.isdir(folder_path):
+            pathlib.Path(folder_path).mkdir(parents=True, exist_ok=True)
 
         if os.path.isfile(zip_path):
             os.remove(zip_path)
@@ -130,7 +146,7 @@ install_libs(
         'forbiddenfruit_0_1_4',
         'yml_6_0',
     ],
-
+    zip_name='bd_libs.zip',
     link = Links.libs,
     message_1 = 'Downloading requirements for betterdata...'
 )

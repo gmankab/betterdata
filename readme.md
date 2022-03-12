@@ -15,7 +15,7 @@ o888bood8P'   o888bood8P'
 
 ```
 
-## Languages
+## Language
 
 - [english, [opened now]](readme.md)
 - [русский, russian](readme_ru.md)
