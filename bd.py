@@ -17,7 +17,7 @@ https://github.com/gmankab/licence
 # import only builtin libs
 from dataclasses import dataclass
 from itertools import islice
-from inspect import cleandoc as cd
+from inspect import cleandoc
 from pprint import pp
 from urllib import request as r
 import pathlib
@@ -57,14 +57,8 @@ class Links:
     discord   = 'https://discord.com/users/396578935540023296'
     github    = 'https://github.com/gmankab/betterdata'
     license   = 'https://github.com/gmankab/licence'
-    latest_bd = (
-        'https://github.com/gmankab/betterdata'
-        '/raw/main/latest_release/bd.py'
-    )
-    libs = (
-        'https://github.com/gmankab/betterdata'
-        '/raw/main/archive/bd_libs-v1.zip'
-    )
+    latest_bd = 'https://github.com/gmankab/betterdata/raw/main/latest_release/bd.py'
+    libs      = 'https://github.com/gmankab/betterdata/raw/main/archive/bd_libs-v1.zip'
 
 
 @dataclass
@@ -74,10 +68,18 @@ class Donate:
     sber    = '5336 6903 8044 6684'
 
 
+def cp(path):
+    '''
+    clean path
+    '''
+    path = str(path).replace('\\', '/')
+    while '//' in path:
+        path = path.replace('//', '/')
+    return path
+
+
 def get_file_dir() -> str:
-    return str(
-        pathlib.Path(__file__).parent.resolve()
-    ).replace('\\', '/')
+    return cp(pathlib.Path(__file__).parent.resolve())
 
 
 FILEDIR = get_file_dir()
@@ -88,36 +90,41 @@ def install_libs(
     zip_name: str,
     link: str = None,
     folder_path: str = None,
-    message_1: str = f'Downloading requirements \
-        for {os.path.basename(__file__)}...',
-    message_2: str = 'Done. Restarting...'
+    message_1: str = f'Downloading requirements for {os.path.basename(__file__)}...',
+    message_2: str = 'Done. Restarting...',
 ) -> None:
-
     if folder_path:
-        if not link and not os.path.isdir(folder_path):
+        folder_path = cp(folder_path)
+        if os.path.isdir(folder_path):
             raise FileExistsError(
-                cd(
-                    f'''
-                    Directory "{folder_path}" not  found.\n
-                    Try specify other dir,
-                    or don't specify it,
-                    if you want to use your file folder
-                    '''
+                cleandoc()(
+f'''
+Directory "{folder_path}" not  found.\n
+Try specify other dir,
+or don't specify it,
+if you want to use your file folder
+'''
                 )
             )
     else:
         folder_path = FILEDIR
 
-    zip_path = f'{folder_path}/bd_libs.zip'
+    zip_path = f'{folder_path}/{zip_name}'
     sys.path.append(zip_path)
 
     try:
         for requirement in requirements:
             __import__(requirement)
     except ImportError as error:
+        print(sys.path)
         if not link:
-            raise ImportError(
-                f'No "{requirement}" lib in specified zip'
+            raise ModuleNotFoundError(
+                cleandoc()(
+f'''
+Error while importing "{requirement}" from {zip_path}:'
+{error.msg}
+'''
+                )
             ) from error
 
         print(message_1)
@@ -240,6 +247,9 @@ def modify_builtin_functions():
                     pos = index + len(delim)
         splitted.append(self[pos:])
         return splitted
+
+    def str_cd(self, tabs: int = 0, tabsize = 4):
+        self = cleandoc(self).replace('\n', ' ' * (tabsize * tabs) + '\n')
 
     def list_rm(self, *to_remove):
         for i in to_list(to_remove):
