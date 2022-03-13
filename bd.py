@@ -97,14 +97,12 @@ def install_libs(
         folder_path = cp(folder_path)
         if os.path.isdir(folder_path):
             raise FileExistsError(
-                cleandoc()(
 f'''
 Directory "{folder_path}" not  found.\n
 Try specify other dir,
 or don't specify it,
 if you want to use your file folder
-'''
-                )
+'''.cd()
             )
     else:
         folder_path = FILEDIR
@@ -116,15 +114,12 @@ if you want to use your file folder
         for requirement in requirements:
             __import__(requirement)
     except ImportError as error:
-        print(sys.path)
         if not link:
             raise ModuleNotFoundError(
-                cleandoc()(
 f'''
 Error while importing "{requirement}" from {zip_path}:'
 {error.msg}
-'''
-                )
+'''.cd()
             ) from error
 
         print(message_1)
@@ -248,8 +243,20 @@ def modify_builtin_functions():
         splitted.append(self[pos:])
         return splitted
 
-    def str_cd(self, tabs: int = 0, tabsize = 4):
-        self = cleandoc(self).replace('\n', ' ' * (tabsize * tabs) + '\n')
+    def str_cd(
+        self: str,
+        tabs: int = 0,
+        tab_symbol = ' ' * 4,
+    ):
+        '''
+        Clean doc strings.
+        Removes tabs before doc strings
+        '''
+        doc = cleandoc(self)
+        if tabs:
+            tab = '\n' + tab_symbol * tabs
+            doc = tab + tab.join(doc.split('\n'))
+        return doc
 
     def list_rm(self, *to_remove):
         for i in to_list(to_remove):
@@ -405,8 +412,8 @@ class Path:
         tee    = '├── '
         last   = '└── '
         plus   = '+ ' if md_diff else ""
-        big_space  = '    '
-        little_space = '  ' if md_diff else ""
+        big_space  = ' ' * 4
+        little_space = ' ' * 2 if md_diff else ""
         dir_path = pathlib.Path(self.to_str())
         files = 0
         directories = 0
