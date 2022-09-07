@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+dependencies = [
+  "rich",
+  "easyselect",
+  "gmanka_yml",
+]
+name = "betterdata"
+version = "22.0.0"
+authors = [
+  { name="gmanka", email="gmankab@gmail.com" },
+]
+description = "a lib for working with data"
+readme = "readme.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/gmankab/betterdata"
+"Documentation" = "https://github.com/gmankab/betterdata"
+"Bug Tracker" = "https://github.com/gmankab/betterdata/issues"
