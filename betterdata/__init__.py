@@ -170,7 +170,6 @@ class Data:
                 val = input()
             except EOFError:
                 continue
-            val = input()
             if not val:
                 continue
             print(
