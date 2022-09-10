@@ -166,6 +166,10 @@ class Data:
 
         while True:
             print(f'\n[bold]input {item}:')
+            try:
+                val = input()
+            except EOFError:
+                continue
             val = input()
             if not val:
                 continue

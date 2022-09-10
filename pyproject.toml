@@ -9,7 +9,7 @@ dependencies = [
   "gmanka_yml",
 ]
 name = "betterdata"
-version = "22.0.1"
+version = "22.0.2"
 authors = [
   { name="gmanka", email="gmankab@gmail.com" },
 ]
