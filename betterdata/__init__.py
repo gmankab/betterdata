@@ -101,15 +101,17 @@ class Data:
 
     def set_data(
         self,
-        data: dict = {},
+        data: dict = None,
         file_path = None
     ):
+        if not data:
+            data = {}
         if not isinstance(
             data,
             dict,
         ):
             raise TypeError(
-                f'expected [green]dict but {type(data)} got'
+                f'expected dict but {type(data)} got'
             )
 
         if file_path:
