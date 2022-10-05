@@ -5,7 +5,7 @@ BETTERDATA
 https://github.com/gmankab/betterdata
 '''
 
-from easyselect import Selection
+from easyselect import Sel
 from pathlib import Path
 import gmanka_yml as yml
 from rich import (
@@ -16,7 +16,7 @@ import rich
 import sys
 
 
-yes_or_no = Selection(
+yes_or_no = Sel(
     items = [
         'yes',
         'no',
@@ -161,7 +161,7 @@ class Data:
         try_int: bool = True,
         stop_if_exist: bool = True,
         exit_on_cancel: bool = True,
-        selection: Selection = yes_or_no,
+        selection: Sel = yes_or_no,
     ):
         if stop_if_exist and self[item]:
             return
