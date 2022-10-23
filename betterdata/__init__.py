@@ -40,6 +40,7 @@ version = '22.1.0'
 
 
 class Data:
+    # pylint: disable=no-member
     '''
     @DynamicAttrs
     '''
@@ -155,13 +156,14 @@ class Data:
                 file_path = self.file_path,
             )
 
-    def interact_input(
+    def interactive_input(
         self,
         item: str,
         try_int: bool = True,
         stop_if_exist: bool = True,
         exit_on_cancel: bool = True,
-        selection: Sel = yes_or_no,
+        sel: Sel = yes_or_no,
+        text = None,
     ):
         if stop_if_exist and self[item]:
             return
@@ -174,11 +176,10 @@ class Data:
                 continue
             if not val:
                 continue
-            print(
-                f'[deep_sky_blue1]{val}[/deep_sky_blue1] - is it correct?'
-            )
 
-            match selection.choose():
+            match sel.choose(
+                f'[deep_sky_blue1]{val}[/deep_sky_blue1] - is it correct?'
+            ):
                 case 'no':
                     continue
                 case 'cancel':
