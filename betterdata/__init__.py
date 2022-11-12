@@ -16,11 +16,11 @@ import rich
 import sys
 
 
-yes_or_no = Sel(
+yes_no = Sel(
     items = [
         'yes',
         'no',
-        'cancel'
+        'exit'
     ],
     styles = [
         'green',
@@ -161,8 +161,8 @@ class Data:
         item: str,
         try_int: bool = True,
         stop_if_exist: bool = True,
-        exit_on_cancel: bool = True,
-        sel: Sel = yes_or_no,
+        kill_on_exit: bool = True,
+        sel: Sel = yes_no,
         text = None,
     ):
         if stop_if_exist and self[item]:
@@ -183,7 +183,7 @@ class Data:
                 case 'no':
                     continue
                 case 'cancel':
-                    if exit_on_cancel:
+                    if kill_on_exit:
                         sys.exit()
                     else:
                         return
