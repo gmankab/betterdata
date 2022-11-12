@@ -169,7 +169,10 @@ class Data:
             return
 
         while True:
-            print(f'\n[bold]input {item}:')
+            if text:
+                print(text)
+            else:
+                print(f'\n[bold]input {item}:')
             try:
                 val = input()
             except EOFError:
