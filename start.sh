@@ -1,2 +1,2 @@
 #!/bin/bash
-python betterdata
+python test.py

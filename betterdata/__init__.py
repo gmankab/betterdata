@@ -1,9 +1,5 @@
-#!/bin/python
-
-'''
-BETTERDATA
-https://github.com/gmankab/betterdata
-'''
+# license: gnu gpl 3 https://gnu.org/licenses/gpl-3.0.en.html
+# sources: https://github.com/gmankab/betterdata
 
 from easyselect import Sel
 from pathlib import Path
@@ -159,13 +155,13 @@ class Data:
     def interactive_input(
         self,
         item: str,
-        try_int: bool = True,
-        stop_if_exist: bool = True,
-        kill_on_exit: bool = True,
+        digits_to_int: bool = True,
+        skip_if_exist: bool = True,
+        kill_app_on_exit: bool = True,
         sel: Sel = yes_no,
         text = None,
     ):
-        if stop_if_exist and self[item]:
+        if skip_if_exist and self[item]:
             return
 
         while True:
@@ -185,13 +181,13 @@ class Data:
             ):
                 case 'no':
                     continue
-                case 'cancel':
-                    if kill_on_exit:
+                case 'exit':
+                    if kill_app_on_exit:
                         sys.exit()
                     else:
                         return
                 case 'yes':
-                    if try_int and val.isdigit():
+                    if digits_to_int and val.isdigit():
                         val = int(val)
                     self[item] = val
                     if self.file_path:
