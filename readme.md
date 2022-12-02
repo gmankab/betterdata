@@ -2,7 +2,7 @@
 
 <img src="https://github.com/gmankab/betterdata/raw/main/img/transparent.png">
 
-python lib for working with data
+library for working with data. Features: automatic writing to disk when new data is added to an object, quick export to yml
 
 ## navigation
 
