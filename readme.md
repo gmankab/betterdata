@@ -8,6 +8,11 @@ python lib for working with data
 
 - [installation](#installation)
 - [usage](#usage)
+- [reading](#reading)
+- [autosaves](#autosaves)
+- [manual saves](#manual-saves)
+- [some syntax sugar](#some-syntax-sugar)
+- [interactive input](#interactive-input)
 - [license](#license)
 
 ### installation[^](#navigation)
@@ -39,7 +44,7 @@ key2: val2
 
 if file already exists, then it will be overwritten
 
-## reading
+### reading[^](#navigation)
 
 if you will not specify `data` argument, then data will be read from disk
 
@@ -70,7 +75,7 @@ print(data)
 # {}
 ```
 
-## autosaves
+### autosaves[^](#navigation)
 
 if you put something in the dictionary then it will also automatically written to disk
 
@@ -96,7 +101,7 @@ print(open('data.yml', 'r').read())
 # key2: val2
 ```
 
-## manual saves
+### manual saves[^](#navigation)
 
 if you editing list in a dict then it will not automatically saved, but you can save it manually
 
@@ -146,7 +151,7 @@ print(open('data.yml', 'r').read())
 # - some very important data
 ```
 
-## some syntax sugar
+### some syntax sugar[^](#navigation)
 
 ```py
 from betterdata import Data
@@ -184,7 +189,7 @@ print(data.key3)
 # AttributeError: 'Data' object has no attribute 'key3'
 ```
 
-### interactive input
+### interactive input[^](#navigation)
 
 ```py
 from betterdata import Data
@@ -204,6 +209,6 @@ args:
 `sel: Sel = yes_no` # you can specify Sel object from [easyselect lib](https://github.com/gmankab/easyselect) which will be used to confirm the value  
 `text = None` # change text which will be printed on the screen
 
-### license
+### license[^](#navigation)
 
 [gnu gpl 3](https://gnu.org/licenses/gpl-3.0.en.html)
