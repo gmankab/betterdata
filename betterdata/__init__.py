@@ -158,6 +158,7 @@ class Data:
         digits_to_int: bool = True,
         skip_if_exist: bool = True,
         kill_app_on_exit: bool = True,
+        confirm: bool = True,
         sel: Sel = yes_no,
         text = None,
     ):
@@ -176,24 +177,26 @@ class Data:
             if not val:
                 continue
 
-            match sel.choose(
-                f'[deep_sky_blue1]{val}[/deep_sky_blue1] - is it correct?'
-            ):
-                case 'no':
-                    continue
-                case 'exit':
-                    if kill_app_on_exit:
-                        sys.exit()
-                    else:
-                        return
-                case 'yes':
-                    if digits_to_int and val.isdigit():
-                        val = int(val)
-                    self[item] = val
-                    if self.file_path:
-                        self.to_file()
-                        print(f'[green]{item} saved to config:\n[deep_sky_blue1]{self.file_path}')
-                    return
+            if confirm:
+                match sel.choose(
+                    f'[deep_sky_blue1]{val}[/deep_sky_blue1] - is it correct?'
+                ):
+                    case 'no':
+                        continue
+                    case 'exit':
+                        if kill_app_on_exit:
+                            sys.exit()
+                        else:
+                            return
+                    case 'yes':
+                        pass
+            if digits_to_int and val.isdigit():
+                val = int(val)
+            self[item] = val
+            if self.file_path:
+                self.to_file()
+                print(f'[green]{item} saved to config:\n[deep_sky_blue1]{self.file_path}')
+            return
 
     def print(
         self
