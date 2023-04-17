@@ -134,7 +134,7 @@ class Data:
             path = path,
         )
         self.set_data(
-            data = yml.read_file(
+            data = yml.from_file(
                 path = self.path
             )
         )

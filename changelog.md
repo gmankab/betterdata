@@ -1,6 +1,6 @@
 # changelog
 
-## 23.0.0
+## 23.0.2
 
 - fixed dependencies
 
