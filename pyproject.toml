@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 dependencies = [
   "rich",
-  "easyselect",
-  "gmanka_yml",
+  "easyselect==23.0.0",
+  "gmanka_yml==23.0.0",
 ]
 name = "betterdata"
-version = "22.1.0"
+version = "23.0.1"
 authors = [
   { name="gmanka", email="gmankab@gmail.com" },
 ]

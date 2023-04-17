@@ -32,7 +32,7 @@ traceback.install(
 )
 c = rich.console.Console()
 print = c.print
-version = '22.1.0'
+version = '23.0.0'
 
 
 class Data:
@@ -43,20 +43,20 @@ class Data:
     def __init__(
         self,
         data: dict = {},
-        file_path: str | Path = None,
+        path: str | Path | None = None,
     ) -> None:
         self.data = {}
-        self.file_path = None
+        self.path = None
         self.set_data(
             data = data,
-            file_path = file_path,
+            path = path,
         )
         if (
             not self.data
         ) and (
-            self.file_path
+            self.path
         ) and (
-            self.file_path.exists()
+            self.path.exists()
         ):
             self.read_file()
 
@@ -69,7 +69,7 @@ class Data:
     def __getitem__(
         self,
         item,
-    ) -> any:
+    ):
         if item in self.data:
             return self.data[item]
         else:
@@ -98,8 +98,8 @@ class Data:
 
     def set_data(
         self,
-        data: dict = None,
-        file_path = None
+        data: dict | None = None,
+        path = None
     ):
         if not data:
             data = {}
@@ -111,8 +111,8 @@ class Data:
                 f'expected dict but {type(data)} got'
             )
 
-        if file_path:
-            self.file_path = Path(file_path)
+        if path:
+            self.path = Path(path)
         if data:
             self.data = data
             for key, val in data.items():
@@ -128,28 +128,28 @@ class Data:
 
     def read_file(
         self,
-        file_path = None,
+        path = None,
     ):
         self.set_data(
-            file_path = file_path,
+            path = path,
         )
         self.set_data(
             data = yml.read_file(
-                file_path = self.file_path
+                path = self.path
             )
         )
 
     def to_file(
         self,
-        file_path = None
+        path = None
     ):
         self.set_data(
-            file_path = file_path
+            path = path
         )
-        if self.file_path and self.data:
+        if self.path and self.data:
             yml.to_file(
                 data = self.data,
-                file_path = self.file_path,
+                path = self.path,
             )
 
     def interactive_input(
@@ -193,9 +193,9 @@ class Data:
             if digits_to_int and val.isdigit():
                 val = int(val)
             self[item] = val
-            if self.file_path:
+            if self.path:
                 self.to_file()
-                print(f'[green]{item} saved to config:\n[deep_sky_blue1]{self.file_path}')
+                print(f'[green]{item} saved to config:\n[deep_sky_blue1]{self.path}')
             return
 
     def print(
